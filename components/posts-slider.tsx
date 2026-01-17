@@ -292,12 +292,14 @@ export function PostsSlider() {
                 <span>{mainArticle.author}</span>
                 <span>{mainArticle.date}</span>
               </div>
-              <button
-                onClick={showModal}
-                className="mt-4 text-primary hover:text-primary/80 font-serif text-sm font-semibold"
+              <a
+                href="/articles/where-peter-is"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-block text-primary hover:text-primary/80 font-serif text-sm font-semibold"
               >
                 {t.readArticle} →
-              </button>
+              </a>
             </div>
           </CardContent>
         </Card>
