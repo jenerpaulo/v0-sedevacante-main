@@ -27,50 +27,30 @@ export default function WherePeterIsArticle() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header/Navigation */}
+      {/* Header/Navigation with Donation Link */}
       <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="text-primary hover:text-primary/80 font-serif">
             ← {language === "en" ? "Back to Home" : language === "pt" ? "Voltar ao Início" : language === "fr" ? "Retour à l'Accueil" : "Volver al Inicio"}
           </Link>
-        </div>
-      </header>
-
-      {/* Donation Banner */}
-      <div className="bg-gold-500/10 border-y border-gold-500/20 py-4 mt-4">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-lg font-serif text-foreground mb-3">
-            {language === "en" && "Support our mission to preserve traditional Catholic faith"}
-            {language === "pt" && "Apoie nossa missão de preservar a fé católica tradicional"}
-            {language === "fr" && "Soutenez notre mission de préserver la foi catholique traditionnelle"}
-            {language === "es" && "Apoya nuestra misión de preservar la fe católica tradicional"}
-          </p>
           <a
             href="https://fund.sedevacante.online/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-8 py-3 bg-gold-500 text-white hover:bg-gold-600 font-serif font-semibold rounded transition-colors"
+            className="text-gold-500 hover:text-gold-400 font-serif text-sm md:text-base transition-colors"
           >
-            {language === "en" && "Donate Now"}
-            {language === "pt" && "Doe Agora"}
-            {language === "fr" && "Faire un Don"}
-            {language === "es" && "Donar Ahora"}
+            {language === "en" && "Support our mission to preserve traditional Catholic faith →"}
+            {language === "pt" && "Apoie nossa missão de preservar a fé católica tradicional →"}
+            {language === "fr" && "Soutenez notre mission de préserver la foi catholique traditionnelle →"}
+            {language === "es" && "Apoya nuestra misión de preservar la fe católica tradicional →"}
           </a>
         </div>
-      </div>
+      </header>
 
       {/* Article Content */}
       <article className="container mx-auto px-4 py-12 max-w-4xl">
         <div
-          className="prose prose-lg dark:prose-invert max-w-none
-            prose-headings:font-sans prose-headings:font-light
-            prose-h1:text-4xl prose-h1:mb-2
-            prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4
-            prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3
-            prose-h4:text-xl prose-h4:mt-6 prose-h4:mb-2
-            prose-p:font-serif prose-p:text-base prose-p:leading-relaxed
-            prose-strong:font-semibold
-            prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
+          className="article-content"
           dangerouslySetInnerHTML={{
             __html: convertMarkdownToHtml(articleContent),
           }}
@@ -109,30 +89,69 @@ export default function WherePeterIsArticle() {
   )
 }
 
-// Simple markdown to HTML converter
+// Markdown to HTML converter with proper formatting
 function convertMarkdownToHtml(markdown: string): string {
   if (!markdown) return ""
 
-  let html = markdown
+  // Split into lines for processing
+  const lines = markdown.split('\n')
+  const result: string[] = []
+  let inParagraph = false
 
-  // Headers
-  html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>")
-  html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>")
-  html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>")
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i]
 
-  // Bold and Italic
-  html = html.replace(/\*\*\*(.*?)\*\*\*/g, "<strong><em>$1</em></strong>")
-  html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-  html = html.replace(/\*(.*?)\*/g, "<em>$1</em>")
+    // Check for headers (must be at start of line)
+    if (line.startsWith('#### ')) {
+      if (inParagraph) { result.push('</p>'); inParagraph = false }
+      result.push(`<h4>${line.slice(5)}</h4>`)
+      continue
+    }
+    if (line.startsWith('### ')) {
+      if (inParagraph) { result.push('</p>'); inParagraph = false }
+      result.push(`<h3>${line.slice(4)}</h3>`)
+      continue
+    }
+    if (line.startsWith('## ')) {
+      if (inParagraph) { result.push('</p>'); inParagraph = false }
+      result.push(`<h2>${line.slice(3)}</h2>`)
+      continue
+    }
+    if (line.startsWith('# ')) {
+      if (inParagraph) { result.push('</p>'); inParagraph = false }
+      result.push(`<h1>${line.slice(2)}</h1>`)
+      continue
+    }
 
-  // Paragraphs
-  html = html.replace(/\n\n/g, "</p><p>")
-  html = "<p>" + html + "</p>"
+    // Empty line = paragraph break
+    if (line.trim() === '') {
+      if (inParagraph) {
+        result.push('</p>')
+        inParagraph = false
+      }
+      continue
+    }
 
-  // Clean up headers in paragraphs
-  html = html.replace(/<p><h/g, "<h")
-  html = html.replace(/<\/h([1-6])><\/p>/g, "</h$1>")
-  html = html.replace(/<p><\/p>/g, "")
+    // Regular text line
+    // Apply inline formatting
+    line = line.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    line = line.replace(/\*(.*?)\*/g, '<em>$1</em>')
+    line = line.replace(/«(.*?)»/g, '«<em>$1</em>»')
 
-  return html
+    if (!inParagraph) {
+      result.push('<p>')
+      inParagraph = true
+    } else {
+      result.push(' ')
+    }
+    result.push(line)
+  }
+
+  // Close any open paragraph
+  if (inParagraph) {
+    result.push('</p>')
+  }
+
+  return result.join('')
 }

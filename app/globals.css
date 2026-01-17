@@ -126,3 +126,64 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Article content styling */
+.article-content {
+  color: var(--foreground);
+  line-height: 1.8;
+}
+
+.article-content h1 {
+  font-family: var(--font-sans);
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  color: var(--foreground);
+  line-height: 1.2;
+}
+
+.article-content h2 {
+  font-family: var(--font-sans);
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.article-content h3 {
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--primary);
+}
+
+.article-content h4 {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 500;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.article-content p {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  color: var(--foreground);
+}
+
+.article-content strong {
+  font-weight: 600;
+}
+
+.article-content em {
+  font-style: italic;
+}
