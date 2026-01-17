@@ -187,3 +187,17 @@
 .article-content em {
   font-style: italic;
 }
+
+/* Bishop image styling */
+.bishop-image-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0 2rem 0;
+}
+
+.bishop-image {
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

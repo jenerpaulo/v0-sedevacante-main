@@ -97,6 +97,10 @@ function convertMarkdownToHtml(markdown: string): string {
   const lines = markdown.split('\n')
   const result: string[] = []
   let inParagraph = false
+  let isFirstH2 = true
+
+  // Bishop image HTML to insert after the homily subtitle
+  const bishopImage = `<div class="bishop-image-container"><img src="/images/bishop.png" alt="Bishop Roy" class="bishop-image" /></div>`
 
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i]
@@ -114,7 +118,13 @@ function convertMarkdownToHtml(markdown: string): string {
     }
     if (line.startsWith('## ')) {
       if (inParagraph) { result.push('</p>'); inParagraph = false }
-      result.push(`<h2>${line.slice(3)}</h2>`)
+      const h2Content = line.slice(3)
+      result.push(`<h2>${h2Content}</h2>`)
+      // Insert bishop image after the first h2 (homily subtitle)
+      if (isFirstH2) {
+        result.push(bishopImage)
+        isFirstH2 = false
+      }
       continue
     }
     if (line.startsWith('# ')) {
