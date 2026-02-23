@@ -291,9 +291,11 @@ export function PostsSlider() {
               {/* Right: Content */}
               <div className="p-6 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-2xl md:text-3xl font-sans font-semibold text-foreground mb-3">
-                    {mainArticle.title}
-                  </h3>
+                  <a href="/articles/where-peter-is" target="_blank" rel="noopener noreferrer" className="block hover:underline">
+                    <h3 className="text-2xl md:text-3xl font-sans font-semibold text-foreground mb-3 cursor-pointer">
+                      {mainArticle.title}
+                    </h3>
+                  </a>
                   <p className="text-muted-foreground font-serif text-base leading-relaxed mb-6">
                     {mainArticle.excerpt}
                   </p>
@@ -364,7 +366,7 @@ export function PostsSlider() {
                     <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="p-4">
-                    <h4 className="text-lg font-sans font-semibold text-foreground mb-2 line-clamp-2">{post.title}</h4>
+                    <h4 onClick={showModal} className="text-lg font-sans font-semibold text-foreground mb-2 line-clamp-2 cursor-pointer hover:underline">{post.title}</h4>
                     <p className="text-muted-foreground font-serif text-xs leading-relaxed mb-3 line-clamp-2">
                       {post.excerpt}
                     </p>
@@ -392,7 +394,7 @@ export function PostsSlider() {
                     <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="p-6">
-                    <h4 className="text-xl font-sans font-semibold text-foreground mb-2 line-clamp-2">{post.title}</h4>
+                    <h4 onClick={showModal} className="text-xl font-sans font-semibold text-foreground mb-2 line-clamp-2 cursor-pointer hover:underline">{post.title}</h4>
                     <p className="text-muted-foreground font-serif text-sm leading-relaxed mb-4 line-clamp-3">
                       {post.excerpt}
                     </p>

@@ -134,7 +134,7 @@ export function Footer() {
             <h3 className="text-lg font-serif font-semibold mb-4">{content.contactTitle}</h3>
             <ul className="space-y-2 font-serif text-primary-foreground/80">
               <li>contato@sedevacante.com.br</li>
-              <li>(12) 98840-6441</li>
+              <li>(11) 96583-6064</li>
               <li>{content.weekdays}</li>
               <li>{content.hours}</li>
             </ul>
@@ -144,7 +144,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-primary-foreground/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-primary-foreground/60 font-serif text-sm">© 2025 {t.footerRights}</p>
+            <p className="text-primary-foreground/60 font-serif text-sm">© 2026 {t.footerRights}</p>
             <div className="flex gap-6 font-serif text-sm items-center">
               <Link
                 href="/privacidade"
