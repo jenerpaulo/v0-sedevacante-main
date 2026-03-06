@@ -37,6 +37,15 @@ const slideImages = [
 
 const schedule: DaySchedule[] = [
   {
+    day: "Sábado", date: "28 de Março", liturgicalName: "Sábado — Chegada", color: "#9C8E7C", noAccommodation: true,
+    events: [
+      { time: "14:00", title: "Chegada e recepção", type: "activity" },
+      { time: "16:00", title: "Confissões", type: "devotion" },
+      { time: "18:00", title: "Santa Missa", celebrant: "Dom Rodrigo da Silva", type: "mass" },
+      { time: "19:30", title: "Confraternização", type: "activity" },
+    ],
+  },
+  {
     day: "Domingo", date: "29 de Março", liturgicalName: "Domingo de Ramos", color: "#DC2626", noAccommodation: true,
     events: [
       { time: "08:30", title: "Chegada e recepção", type: "activity" },
@@ -224,11 +233,17 @@ function HeroSection() {
             <span className="text-[#F5F0E8] text-sm md:text-base font-medium">29 de Março a 5 de Abril de 2026</span>
           </div>
         </div>
-        <div className="opacity-0 animate-fade-in-up animate-delay-600">
+        <div className="opacity-0 animate-fade-in-up animate-delay-600 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a href="#hospedagem" className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-[#0C0A09] font-semibold px-8 py-4 rounded-lg text-base md:text-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(201,168,76,0.3)] hover:-translate-y-0.5">
-            Sobre Hospedagem
+            Preciso de Hospedagem
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </a>
+          <a href="#inscricao" className="inline-flex items-center gap-2 bg-transparent border border-gold/60 hover:border-gold text-gold font-semibold px-8 py-4 rounded-lg text-base md:text-lg transition-all duration-300 hover:bg-gold/10 hover:-translate-y-0.5">
+            Doações — Ajude a Cerimônia
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </a>
         </div>
@@ -283,11 +298,11 @@ function AboutSection() {
               As cerimônias serão celebradas por <strong className="text-gold">Dom Rodrigo da Silva</strong>, no <strong className="text-[#F5F0E8]">Seminário São José</strong>, em Bragança Paulista, interior de São Paulo.
             </p>
             <p className="text-[#D4C5B0] leading-relaxed text-base md:text-lg">
-              A programação começa na Sexta feira dia 28, Domingo de Ramos (29 de março) e segue até o Domingo de Páscoa (5 de abril), com missas, confissões, Via Sacra, meditações e os ritos do Tríduo Pascal.
+              A programação começa no Sábado dia 28, Domingo de Ramos (29 de março) e segue até o Domingo de Páscoa (5 de abril), com missas, confissões, Via Sacra, meditações e os ritos do Tríduo Pascal.
             </p>
             <div className="grid grid-cols-2 gap-4 pt-4">
               {[
-                { icon: "📅", label: "Período", value: "29 de Março a 5 de Abril" },
+                { icon: "📅", label: "Período", value: "28 de Março a 5 de Abril" },
                 { icon: "⛪", label: "Local", value: "Seminário São José" },
                 { icon: "📍", label: "Cidade", value: "Bragança Paulista-SP" },
                 { icon: "✝", label: "Celebrante", value: "Bispo Dom Rodrigo da Silva" },
@@ -411,16 +426,28 @@ function LocationSection() {
 
           <div className="space-y-8">
             <div>
-              <h3 className="text-2xl font-bold text-[#F5F0E8] mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>Seminário São José</h3>
+              <h3 className="text-2xl font-bold text-[#F5F0E8] mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <a href="https://maps.app.goo.gl/Czz21SHkJFkUErqt7" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors duration-200">
+                  Seminário São José ↗
+                </a>
+              </h3>
               <p className="text-[#D4C5B0] leading-relaxed text-base md:text-lg">
-                As celebrações ocorrerão no <strong className="text-gold">Seminário São José</strong> em Bragança Paulista, interior de São Paulo, um ambiente agradável, acolhedor e de contemplação.
+                As celebrações ocorrerão no{" "}
+                <a href="https://maps.app.goo.gl/Czz21SHkJFkUErqt7" target="_blank" rel="noopener noreferrer" className="text-gold hover:text-gold-light font-semibold underline underline-offset-2 decoration-gold/40 hover:decoration-gold transition-all duration-200">
+                  Seminário São José
+                </a>{" "}
+                em Bragança Paulista, interior de São Paulo, um ambiente agradável, acolhedor e de contemplação.
               </p>
             </div>
             <div className="bg-gold/5 border border-gold/20 rounded-xl p-5">
               <div className="flex items-start gap-3">
                 <span className="text-gold text-xl">📍</span>
                 <div>
-                  <h4 className="text-gold font-semibold mb-1">Seminário São José</h4>
+                  <h4 className="text-gold font-semibold mb-1">
+                    <a href="https://maps.app.goo.gl/Czz21SHkJFkUErqt7" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                      Seminário São José ↗
+                    </a>
+                  </h4>
                   <p className="text-[#D4C5B0] text-sm leading-relaxed">
                     Bragança Paulista, SP — Interior de São Paulo. Um ambiente dedicado à formação religiosa e à vida contemplativa, ideal para a vivência da Semana Santa.
                   </p>
