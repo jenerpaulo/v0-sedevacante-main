@@ -68,7 +68,7 @@ const schedule: DaySchedule[] = [
     day: "Quarta-feira", date: "1 de Abril", liturgicalName: "Quarta-feira Santa", color: "#8B5CF6",
     events: [
       { time: "19:00", title: "Santa Missa — rezada", celebrant: "Dom Rodrigo da Silva", type: "mass" },
-      { time: "20:00", title: "Ofício das Trevas", type: "devotion" },
+      { time: "20:00", title: "Ofício de Trevas", type: "devotion" },
     ],
   },
   {
