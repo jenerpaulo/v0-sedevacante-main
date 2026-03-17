@@ -202,7 +202,7 @@ function HeroSection() {
           </div>
         </div>
         <div className="opacity-0 animate-fade-in-up animate-delay-600 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="#hospedagem" className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-[#0C0A09] font-semibold px-8 py-4 rounded-lg text-base md:text-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(201,168,76,0.3)] hover:-translate-y-0.5">
+          <a href="#inscricao" className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-[#0C0A09] font-semibold px-8 py-4 rounded-lg text-base md:text-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(201,168,76,0.3)] hover:-translate-y-0.5">
             Preciso de Hospedagem
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
