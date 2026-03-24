@@ -108,7 +108,7 @@ function HeroSection() {
           <div className="relative flex-shrink-0">
             <div className="pointer-events-none absolute -inset-8 bg-[radial-gradient(circle,rgba(201,168,76,0.08)_0%,transparent_70%)]" />
             <img
-              src="/livro-perspec.png"
+              src="/images/livro/livro-perspec.png"
               alt="A Crise de Autoridade na Igreja - Capa do livro em perspectiva"
               className="livro-perspec relative w-[240px] sm:w-[300px] lg:w-[380px] drop-shadow-[0_24px_48px_rgba(0,0,0,0.6)]"
             />
@@ -269,7 +269,7 @@ function FreeSampleSection() {
             {/* Book Image Left */}
             <div className="flex-shrink-0 hidden md:block">
               <img
-                src="/livro-perspec2.png"
+                src="/images/livro/livro-perspec2.png"
                 alt="A Crise de Autoridade na Igreja — Livro"
                 className="w-[280px] lg:w-[340px] drop-shadow-[0_16px_32px_rgba(0,0,0,0.5)]"
               />
@@ -370,7 +370,7 @@ function AuthorSection() {
             <div className="flex-shrink-0">
               <div className="livro-author-frame relative">
                 <img
-                  src="/author-hecquard.png"
+                  src="/images/livro/author-hecquard.png"
                   alt="Maxence Hecquard"
                   className="relative w-[280px] sm:w-[320px] md:w-[350px] aspect-[3/4] object-cover"
                 />
@@ -427,7 +427,7 @@ function AuthorSection() {
 /* --- SECTION: Palavra do Bispo --- */
 function BishopSection() {
   const [activePhoto, setActivePhoto] = useState(0)
-  const bishopPhotos = ["/dom-rodrigo.png", "/dom-rodrigo-2.jpeg"]
+  const bishopPhotos = ["/images/livro/dom-rodrigo.png", "/images/livro/dom-rodrigo-2.jpeg"]
 
   useEffect(() => {
     const interval = setInterval(() => {
