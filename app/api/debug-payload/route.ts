@@ -1,35 +1,30 @@
 import { NextResponse } from "next/server"
-import { getPayload } from "payload"
 import config from "@payload-config"
 
 export async function GET() {
-  try {
-    // Initialize payload - this should trigger db push/migration
-    const payload = await getPayload({ config })
+  const results: Record<string, any> = {}
 
-    // Try to count users to test if tables exist
-    try {
-      const users = await payload.find({
-        collection: "users",
-        limit: 1,
-      })
-      return NextResponse.json({
-        status: "ok",
-        message: "Database tables exist",
-        userCount: users.totalDocs,
-      })
-    } catch (dbError: any) {
-      // Tables don't exist, try to create them
-      return NextResponse.json({
-        status: "db_error",
-        message: dbError.message?.slice(0, 500),
-        hint: "Tables may not exist. Need to run db:push or migrate.",
-      })
-    }
+  try {
+    const { RootPage } = await import("@payloadcms/next/views")
+    const { importMap } = await import("../../(payload)/admin/importMap")
+
+    results.importMapKeys = Object.keys(importMap).length
+
+    const params = Promise.resolve({ segments: ["login"] })
+    const searchParams = Promise.resolve({})
+
+    const element = await RootPage({ config, params, searchParams, importMap })
+    results.renderSuccess = true
+    results.elementType = typeof element
   } catch (e: any) {
-    return NextResponse.json({
-      status: "error",
-      message: e.message?.slice(0, 500),
-    }, { status: 500 })
+    results.renderError = e.message?.slice(0, 1000)
+    results.renderStack = e.stack?.split("\n").slice(0, 15)
+    results.renderName = e.name
+    if (e.digest) {
+      results.digest = e.digest
+    }
   }
+
+  results.nodeVersion = process.version
+  return NextResponse.json(results)
 }
