@@ -282,6 +282,22 @@
   100% { left: 100%; }
 }
 
+/* Book floating animation */
+@keyframes livroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes livroShadow {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(0.85); opacity: 0.3; }
+}
+.livro-perspec {
+  animation: livroFloat 4s ease-in-out infinite;
+}
+.livro-perspec-shadow {
+  animation: livroShadow 4s ease-in-out infinite;
+}
+
 /* Dark input for livro forms */
 .livro-dark-input {
   background: #0C0A09;

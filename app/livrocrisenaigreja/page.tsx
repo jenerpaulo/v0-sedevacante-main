@@ -106,12 +106,14 @@ function HeroSection() {
         <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-center lg:justify-center lg:gap-16">
           {/* Book Perspective Image */}
           <div className="relative flex-shrink-0">
-            <div className="pointer-events-none absolute -inset-8 bg-[radial-gradient(circle,rgba(201,168,76,0.08)_0%,transparent_70%)]" />
+            <div className="pointer-events-none absolute -inset-8 bg-[radial-gradient(circle,rgba(201,168,76,0.12)_0%,transparent_70%)] blur-2xl" />
             <img
               src="/images/livro/livro-perspec.png"
               alt="A Crise de Autoridade na Igreja - Capa do livro em perspectiva"
               className="livro-perspec relative w-[240px] sm:w-[300px] lg:w-[380px] drop-shadow-[0_24px_48px_rgba(0,0,0,0.6)]"
             />
+            {/* Dynamic shadow under the book */}
+            <div className="livro-perspec-shadow absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-6 bg-black/50 rounded-[50%] blur-xl" />
           </div>
 
           {/* Text Content */}
