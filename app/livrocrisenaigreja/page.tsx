@@ -125,10 +125,10 @@ function HeroSection() {
               Lançamento Inédito
             </div>
 
-            <h1 className="font-cinzel-decorative gold-text text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 tracking-wide uppercase">
-              <span className="block text-justify" style={{ textAlignLast: "justify" }}>A Crise</span>
-              <span className="block text-justify" style={{ textAlignLast: "justify" }}>de Autoridade</span>
-              <span className="block text-justify" style={{ textAlignLast: "justify" }}>na Igreja</span>
+            <h1 className="font-cinzel-decorative gold-text text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 tracking-wide uppercase text-center">
+              <span className="block">A Crise</span>
+              <span className="block">de Autoridade</span>
+              <span className="block">na Igreja</span>
             </h1>
 
             <p className="font-serif text-[#D4C8B8] text-xl sm:text-2xl italic mb-6 leading-relaxed">
