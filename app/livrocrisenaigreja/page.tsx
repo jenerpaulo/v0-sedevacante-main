@@ -383,7 +383,7 @@ function AuthorSection() {
             </div>
 
             {/* Author Bio */}
-            <div className="flex-1 text-center md:text-left">
+            <div className="flex-1 text-center md:text-justify">
               <p className="text-[#C9A84C] text-sm font-medium tracking-[0.2em] uppercase mb-3">
                 Sobre o Autor
               </p>
@@ -394,10 +394,10 @@ function AuthorSection() {
 
               <div className="space-y-4 mt-6">
                 <p className="text-[#B8AEA2] leading-relaxed">
-                  Maxence Hecquard é um renomado teólogo e filósofo francês, reconhecido internacionalmente por seus estudos sobre a crise do mundo moderno e da Igreja Católica. Com formação em filosofia pela Sorbonne e estudos na ESSEC (École Supérieure de Sciences Économiques et Commerciales) e na Faculdade de Direito da Universidade Panthéon-Assas (Paris II), tem se dedicado nas últimas décadas ao estudo da autoridade eclesiástica, da tradição católica e das raízes intelectuais da modernidade.
+                  Maxence Hecquard é um renomado filósofo francês, reconhecido internacionalmente por seus estudos sobre a crise do mundo moderno e da Igreja Católica. Com formação em filosofia pela Sorbonne e estudos na ESSEC (École Supérieure de Sciences Économiques et Commerciales) e na Faculdade de Direito da Universidade Panthéon-Assas (Paris II), tem se dedicado nas últimas décadas ao estudo da autoridade eclesiástica, da tradição católica e das raízes intelectuais da modernidade.
                 </p>
                 <p className="text-[#B8AEA2] leading-relaxed">
-                  É autor de <em className="text-[#D4C8B8]">Les Fondements philosophiques de la démocratie moderne</em> (Os Fundamentos Filosóficos da Democracia Moderna), obra na qual examina as bases metafísicas e teológicas da ideologia democrática moderna, remontando suas origens à rejeição da autoridade divina e papal no pensamento iluminista.
+                  É autor de <a href="https://loja.institutosantoatanasio.com.br/os-fundamentos-filosoficos-da-democracia-moderna" target="_blank" rel="noopener noreferrer" className="text-[#C9A84C] underline hover:text-[#D4B65C] transition-colors"><em>Les Fondements philosophiques de la démocratie moderne</em></a> (Os Fundamentos Filosóficos da Democracia Moderna), obra na qual examina as bases metafísicas e teológicas da ideologia democrática moderna, remontando suas origens à rejeição da autoridade divina e papal no pensamento iluminista.
                 </p>
                 <p className="text-[#B8AEA2] leading-relaxed">
                   Hecquard combina sólida erudição acadêmica com clareza expositiva, tornando temas complexos acessíveis ao público leigo sem sacrificar a profundidade filosófica e teológica.
@@ -405,14 +405,11 @@ function AuthorSection() {
                 <p className="text-[#B8AEA2] leading-relaxed">
                   Esta é sua primeira obra traduzida para o português, trazendo ao público lusófono uma análise fundamental para compreender os debates contemporâneos sobre a Igreja.
                 </p>
-                <p className="text-[#D4C8B8] text-sm mt-4 leading-relaxed">
-                  <em>Les Fondements philosophiques de la démocratie moderne</em>
-                </p>
               </div>
 
               {/* Tags */}
               <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-8">
-                {["Filósofo", "Teólogo", "Escritor"].map((tag) => (
+                {["Filósofo", "Doutor", "Escritor"].map((tag) => (
                   <span
                     key={tag}
                     className="px-5 py-2 rounded-full text-sm font-medium text-[#C9A84C] border border-[rgba(201,168,76,0.3)] bg-[rgba(201,168,76,0.05)] hover:bg-[rgba(201,168,76,0.1)] transition-colors"
