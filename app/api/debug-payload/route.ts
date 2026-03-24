@@ -1,34 +1,35 @@
 import { NextResponse } from "next/server"
+import { getPayload } from "payload"
 import config from "@payload-config"
 
-export async function GET(request: Request) {
-  const results: Record<string, any> = {}
-
-  // Test: Actually try to render the admin page
+export async function GET() {
   try {
-    const { RootPage } = await import("@payloadcms/next/views")
-    const { importMap } = await import("../../(payload)/admin/importMap")
+    // Initialize payload - this should trigger db push/migration
+    const payload = await getPayload({ config })
 
-    results.importMapKeys = Object.keys(importMap).length
-    results.importMapSample = Object.keys(importMap).slice(0, 3)
-
-    // Try calling RootPage like the actual page does
-    const params = Promise.resolve({ segments: ["login"] })
-    const searchParams = Promise.resolve({})
-
-    const element = await RootPage({ config, params, searchParams, importMap })
-    results.renderSuccess = true
-    results.elementType = typeof element
-  } catch (e: any) {
-    results.renderError = e.message
-    results.renderStack = e.stack?.split("\n").slice(0, 10)
-    results.renderName = e.name
-    // Check if it's a redirect (expected for /admin -> /admin/login)
-    if (e.digest) {
-      results.digest = e.digest
+    // Try to count users to test if tables exist
+    try {
+      const users = await payload.find({
+        collection: "users",
+        limit: 1,
+      })
+      return NextResponse.json({
+        status: "ok",
+        message: "Database tables exist",
+        userCount: users.totalDocs,
+      })
+    } catch (dbError: any) {
+      // Tables don't exist, try to create them
+      return NextResponse.json({
+        status: "db_error",
+        message: dbError.message?.slice(0, 500),
+        hint: "Tables may not exist. Need to run db:push or migrate.",
+      })
     }
+  } catch (e: any) {
+    return NextResponse.json({
+      status: "error",
+      message: e.message?.slice(0, 500),
+    }, { status: 500 })
   }
-
-  results.nodeVersion = process.version
-  return NextResponse.json(results)
 }
