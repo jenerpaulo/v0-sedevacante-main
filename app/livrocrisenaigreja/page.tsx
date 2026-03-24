@@ -168,9 +168,10 @@ function HeroSection() {
                 <ChevronRight size={18} />
               </a>
               <div className="text-sm text-[#8A8078]">
-                <span className="text-[#C9A84C] font-bold text-lg">R$80</span>
+                <span className="text-[#C9A84C] font-bold text-lg">R$89,90</span>
                 <span className="ml-1">no 1º Lote</span>
                 <span className="block text-xs mt-0.5">35% de desconto · Vagas limitadas</span>
+                <span className="block text-xs mt-0.5 text-green-500 font-semibold">Frete grátis</span>
               </div>
             </div>
           </div>
@@ -467,7 +468,7 @@ function BishopSection() {
 
               <div className="mt-8">
                 <p className="text-[#E8E0D4] font-cinzel-decorative font-bold text-lg">
-                  Dom Rodrigo
+                  Dom Rodrigo da Silva
                 </p>
                 <p className="text-[#8A8078] text-sm mt-0.5">
                   Bispo
@@ -506,8 +507,8 @@ function PricingSection() {
       badge: "Ativo",
       badgeClass: "shimmer",
       active: true,
-      originalPrice: "R$120,00",
-      price: "R$80,00",
+      originalPrice: "R$139,90",
+      price: "R$89,90",
       discount: "35% off",
       note: "Frete grátis",
       features: [
@@ -521,8 +522,8 @@ function PricingSection() {
       badge: "Em breve",
       badgeClass: "bg-[#1C1917] text-[#8A8078] border border-[rgba(201,168,76,0.1)]",
       active: false,
-      originalPrice: "R$120,00",
-      price: "R$96,00",
+      originalPrice: "R$139,90",
+      price: "R$99,90",
       discount: "20% off",
       note: "+frete",
       features: [
@@ -537,7 +538,7 @@ function PricingSection() {
       badgeClass: "bg-[#1C1917] text-[#8A8078] border border-[rgba(201,168,76,0.1)]",
       active: false,
       originalPrice: null,
-      price: "R$120,00",
+      price: "R$119,90",
       discount: null,
       note: "+frete",
       features: [
@@ -675,8 +676,8 @@ function PurchaseSection() {
   const [copied, setCopied] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
-  const pricePerUnit = 8000 // R$80,00 in cents
-  const priceDisplay = "R$80,00"
+  const pricePerUnit = 8990 // R$89,90 in cents
+  const priceDisplay = "R$89,90"
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
