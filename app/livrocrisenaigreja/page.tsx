@@ -513,7 +513,7 @@ function PricingSection() {
       note: "Frete grátis",
       features: [
         "Preço exclusivo de lançamento",
-        "Vagas limitadas",
+        "Unidades limitadas",
         "Envio assim que disponível",
       ],
     },
@@ -700,14 +700,14 @@ function PurchaseSection() {
           quantity: form.quantity,
           totalAmount: totalCents / 100,
           tier: "lote1",
-          cpf: form.cpf || undefined,
-          rua: form.rua || undefined,
-          numero: form.numero || undefined,
+          cpf: form.cpf,
+          rua: form.rua,
+          numero: form.numero,
           complemento: form.complemento || undefined,
-          bairro: form.bairro || undefined,
-          cidade: form.cidade || undefined,
-          uf: form.uf || undefined,
-          cep: form.cep || undefined,
+          bairro: form.bairro,
+          cidade: form.cidade,
+          uf: form.uf,
+          cep: form.cep,
         }),
       })
 
@@ -764,7 +764,7 @@ function PurchaseSection() {
 
                 <div>
                   <label className="block text-sm font-medium text-[#D4C8B8] mb-1.5">
-                    Nome completo
+                    Nome completo <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -779,7 +779,7 @@ function PurchaseSection() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-[#D4C8B8] mb-1.5">
-                      E-mail
+                      E-mail <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -792,7 +792,7 @@ function PurchaseSection() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[#D4C8B8] mb-1.5">
-                      Telefone / WhatsApp
+                      Telefone / WhatsApp <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
@@ -808,10 +808,11 @@ function PurchaseSection() {
                 {/* CPF */}
                 <div>
                   <label className="block text-sm font-medium text-[#D4C8B8] mb-1.5">
-                    CPF
+                    CPF <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
+                    required
                     value={form.cpf}
                     onChange={(e) => setForm({ ...form, cpf: e.target.value })}
                     className="livro-dark-input w-full px-4 py-3 rounded-xl text-sm"
@@ -825,25 +826,79 @@ function PurchaseSection() {
                     Endereço de Entrega
                   </p>
                   <div className="space-y-3">
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="col-span-2">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
                         <label className="block text-xs font-medium text-[#D4C8B8] mb-1">
-                          Rua / Logradouro
+                          CEP <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
-                          value={form.rua}
-                          onChange={(e) => setForm({ ...form, rua: e.target.value })}
+                          required
+                          value={form.cep}
+                          onChange={async (e) => {
+                            const cep = e.target.value.replace(/\D/g, "")
+                            const formatted = cep.length > 5 ? cep.slice(0, 5) + "-" + cep.slice(5, 8) : cep
+                            setForm((prev) => ({ ...prev, cep: formatted }))
+                            if (cep.length === 8) {
+                              try {
+                                const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                                const data = await res.json()
+                                if (!data.erro) {
+                                  setForm((prev) => ({
+                                    ...prev,
+                                    cep: formatted,
+                                    rua: data.logradouro || "",
+                                    bairro: data.bairro || "",
+                                    cidade: data.localidade || "",
+                                    uf: data.uf || "",
+                                  }))
+                                }
+                              } catch {}
+                            }
+                          }}
+                          maxLength={9}
                           className="livro-dark-input w-full px-3 py-2.5 rounded-xl text-sm"
-                          placeholder="Nome da rua"
+                          placeholder="00000-000"
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#D4C8B8] mb-1">
-                          Número
+                          UF <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
+                          required
+                          maxLength={2}
+                          value={form.uf}
+                          onChange={(e) => setForm({ ...form, uf: e.target.value.toUpperCase() })}
+                          className="livro-dark-input w-full px-3 py-2.5 rounded-xl text-sm"
+                          placeholder="SP"
+                          readOnly
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="col-span-2">
+                        <label className="block text-xs font-medium text-[#D4C8B8] mb-1">
+                          Rua / Logradouro <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={form.rua}
+                          onChange={(e) => setForm({ ...form, rua: e.target.value })}
+                          className="livro-dark-input w-full px-3 py-2.5 rounded-xl text-sm"
+                          placeholder="Nome da rua"
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-[#D4C8B8] mb-1">
+                          Número <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
                           value={form.numero}
                           onChange={(e) => setForm({ ...form, numero: e.target.value })}
                           className="livro-dark-input w-full px-3 py-2.5 rounded-xl text-sm"
@@ -866,53 +921,30 @@ function PurchaseSection() {
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs font-medium text-[#D4C8B8] mb-1">
-                          Bairro
+                          Bairro <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
+                          required
                           value={form.bairro}
                           onChange={(e) => setForm({ ...form, bairro: e.target.value })}
                           className="livro-dark-input w-full px-3 py-2.5 rounded-xl text-sm"
                           placeholder="Bairro"
+                          readOnly
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#D4C8B8] mb-1">
-                          Cidade
+                          Cidade <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
+                          required
                           value={form.cidade}
                           onChange={(e) => setForm({ ...form, cidade: e.target.value })}
                           className="livro-dark-input w-full px-3 py-2.5 rounded-xl text-sm"
                           placeholder="Cidade"
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-medium text-[#D4C8B8] mb-1">
-                          UF
-                        </label>
-                        <input
-                          type="text"
-                          maxLength={2}
-                          value={form.uf}
-                          onChange={(e) => setForm({ ...form, uf: e.target.value.toUpperCase() })}
-                          className="livro-dark-input w-full px-3 py-2.5 rounded-xl text-sm"
-                          placeholder="SP"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#D4C8B8] mb-1">
-                          CEP
-                        </label>
-                        <input
-                          type="text"
-                          value={form.cep}
-                          onChange={(e) => setForm({ ...form, cep: e.target.value })}
-                          className="livro-dark-input w-full px-3 py-2.5 rounded-xl text-sm"
-                          placeholder="00000-000"
+                          readOnly
                         />
                       </div>
                     </div>
@@ -1150,10 +1182,10 @@ function DonationSection() {
           {!showForm && step === "form" && (
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 border-[rgba(201,168,76,0.3)] text-[#C9A84C] font-bold hover:bg-[rgba(201,168,76,0.05)] hover:border-[rgba(201,168,76,0.5)] transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold transition-all shadow-lg shadow-green-900/30"
             >
               <Heart size={18} />
-              Fazer uma Doação
+              Apoie o Seminário São José
             </button>
           )}
 
