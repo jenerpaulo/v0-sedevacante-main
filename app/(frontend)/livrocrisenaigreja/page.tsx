@@ -676,7 +676,24 @@ function PurchaseSection() {
   const [cpfError, setCpfError] = useState("")
   const [cepError, setCepError] = useState("")
   const [copied, setCopied] = useState(false)
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
+
+  // Poll OpenPix for payment confirmation
+  useEffect(() => {
+    if (step !== "pix" || !pixData?.correlationID || paymentConfirmed) return
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/pix-status?id=${pixData.correlationID}`)
+        const data = await res.json()
+        if (data.status === "COMPLETED") {
+          setPaymentConfirmed(true)
+          clearInterval(interval)
+        }
+      } catch { /* silent */ }
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [step, pixData?.correlationID, paymentConfirmed])
 
   function validateCPF(cpf: string): boolean {
     const nums = cpf.replace(/\D/g, "")
@@ -1064,6 +1081,39 @@ function PurchaseSection() {
 
             {step === "pix" && pixData && (
               <div className="space-y-6">
+                {paymentConfirmed ? (
+                  <div className="flex flex-col items-center justify-center py-8 gap-4 text-center">
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[rgba(34,197,94,0.15)] mb-2 animate-[scaleIn_0.4s_ease-out]">
+                      <CheckCircle size={40} className="text-green-500" />
+                    </div>
+                    <h3 className="font-cinzel-decorative text-green-400 text-xl font-bold">
+                      Pagamento Confirmado!
+                    </h3>
+                    <p className="text-sm text-[#B8AEA2] max-w-xs">
+                      Obrigado, {form.name.split(" ")[0]}! Seu pedido de {form.quantity}x exemplar{form.quantity > 1 ? "es" : ""} foi confirmado.
+                    </p>
+                    <p className="text-xs text-[#8A8078]">
+                      Confirmação enviada para {form.email}
+                    </p>
+                    <div className="p-4 rounded-xl bg-[rgba(34,197,94,0.05)] border border-[rgba(34,197,94,0.2)] w-full mt-2">
+                      <p className="text-sm text-green-400 font-medium">
+                        R${((pricePerUnit * form.quantity) / 100).toFixed(2).replace(".", ",")} recebido com sucesso
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setStep("form")
+                        setPixData(null)
+                        setPaymentConfirmed(false)
+                        setForm({ name: "", email: "", phone: "", quantity: 1, cpf: "", rua: "", numero: "", complemento: "", bairro: "", cidade: "", uf: "", cep: "" })
+                      }}
+                      className="w-full py-3 rounded-xl text-sm text-[#8A8078] border border-[rgba(201,168,76,0.08)] hover:text-[#D4C8B8] hover:border-[rgba(201,168,76,0.2)] transition-colors mt-2"
+                    >
+                      Fazer nova encomenda
+                    </button>
+                  </div>
+                ) : (
+                <div className="space-y-6">
                 <div className="text-center">
                   <div className="inline-flex items-center gap-2 bg-[rgba(201,168,76,0.1)] text-[#C9A84C] px-4 py-2 rounded-full text-sm font-medium mb-4">
                     <Clock size={16} />
@@ -1122,8 +1172,7 @@ function PurchaseSection() {
                     R${((pricePerUnit * form.quantity) / 100).toFixed(2).replace(".", ",")}
                   </p>
                   <p className="text-xs text-[#8A8078] mt-1">
-                    Após o pagamento, você receberá a confirmação por e-mail em{" "}
-                    {form.email}
+                    A confirmação aparecerá automaticamente após o pagamento
                   </p>
                 </div>
 
@@ -1131,12 +1180,15 @@ function PurchaseSection() {
                   onClick={() => {
                     setStep("form")
                     setPixData(null)
+                    setPaymentConfirmed(false)
                     setForm({ name: "", email: "", phone: "", quantity: 1, cpf: "", rua: "", numero: "", complemento: "", bairro: "", cidade: "", uf: "", cep: "" })
                   }}
                   className="w-full py-3 rounded-xl text-sm text-[#8A8078] border border-[rgba(201,168,76,0.08)] hover:text-[#D4C8B8] hover:border-[rgba(201,168,76,0.2)] transition-colors"
                 >
                   Fazer nova encomenda
                 </button>
+                </div>
+                )}
               </div>
             )}
 
@@ -1176,10 +1228,28 @@ function DonationSection() {
   const [pixData, setPixData] = useState<{
     brCode: string
     qrCodeImage: string
+    correlationID: string
   } | null>(null)
   const [error, setError] = useState("")
   const [copied, setCopied] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false)
+
+  // Poll OpenPix for donation payment confirmation
+  useEffect(() => {
+    if (step !== "pix" || !pixData?.correlationID || paymentConfirmed) return
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/pix-status?id=${pixData.correlationID}`)
+        const data = await res.json()
+        if (data.status === "COMPLETED") {
+          setPaymentConfirmed(true)
+          clearInterval(interval)
+        }
+      } catch { /* silent */ }
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [step, pixData?.correlationID, paymentConfirmed])
 
   async function handleDonate(e: FormEvent) {
     e.preventDefault()
@@ -1209,7 +1279,7 @@ function DonationSection() {
       const data = await res.json().catch(() => ({}))
 
       if (data?.brCode && data?.qrCodeImage) {
-        setPixData({ brCode: data.brCode, qrCodeImage: data.qrCodeImage })
+        setPixData({ brCode: data.brCode, qrCodeImage: data.qrCodeImage, correlationID: data.correlationID || "" })
         setStep("pix")
       } else {
         setStep("done")
@@ -1303,6 +1373,35 @@ function DonationSection() {
 
           {step === "pix" && pixData && (
             <div className="mt-6 space-y-6 rounded-2xl bg-[#161412]/80 border border-[rgba(201,168,76,0.12)] p-6">
+              {paymentConfirmed ? (
+                <div className="flex flex-col items-center justify-center py-6 gap-4 text-center">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[rgba(34,197,94,0.15)] mb-2">
+                    <CheckCircle size={40} className="text-green-500" />
+                  </div>
+                  <h3 className="font-cinzel-decorative text-green-400 text-xl font-bold">
+                    Doação Confirmada!
+                  </h3>
+                  <p className="text-sm text-[#B8AEA2] max-w-xs">
+                    Obrigado, {form.name.split(" ")[0]}! Sua doação de R${form.amount.replace(".", ",")} foi recebida.
+                  </p>
+                  <p className="text-xs text-[#8A8078]">
+                    Que Deus abençoe sua generosidade.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setStep("form")
+                      setPixData(null)
+                      setPaymentConfirmed(false)
+                      setForm({ name: "", email: "", amount: "" })
+                      setShowForm(false)
+                    }}
+                    className="w-full py-3 rounded-xl text-sm text-[#8A8078] border border-[rgba(201,168,76,0.08)] hover:text-[#D4C8B8] transition-colors mt-2"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              ) : (
+              <>
               <div className="text-center">
                 <div className="inline-flex items-center gap-2 bg-[rgba(201,168,76,0.1)] text-[#C9A84C] px-4 py-2 rounded-full text-sm font-medium mb-2">
                   <Clock size={16} />
@@ -1345,10 +1444,14 @@ function DonationSection() {
                   </div>
                 </div>
               )}
+              <p className="text-xs text-center text-[#8A8078]">
+                A confirmação aparecerá automaticamente após o pagamento
+              </p>
               <button
                 onClick={() => {
                   setStep("form")
                   setPixData(null)
+                  setPaymentConfirmed(false)
                   setForm({ name: "", email: "", amount: "" })
                   setShowForm(false)
                 }}
@@ -1356,6 +1459,8 @@ function DonationSection() {
               >
                 Fechar
               </button>
+              </>
+              )}
             </div>
           )}
 
