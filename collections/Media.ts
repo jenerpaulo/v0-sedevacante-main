@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload"
+import { isLoggedIn, isAdminDelete } from "../lib/access"
 
 export const Media: CollectionConfig = {
   slug: "media",
@@ -7,7 +8,14 @@ export const Media: CollectionConfig = {
     plural: "Mídias",
   },
   access: {
+    // Público pode ver mídias (imagens nos artigos)
     read: () => true,
+    // Qualquer usuário logado pode fazer upload
+    create: isLoggedIn,
+    // Qualquer usuário logado pode atualizar (alt text, etc.)
+    update: isLoggedIn,
+    // Só admin pode deletar mídias
+    delete: isAdminDelete,
   },
   upload: {
     staticDir: "public/media",

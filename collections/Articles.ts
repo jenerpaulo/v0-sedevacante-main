@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload"
+import { canCreate, isEditorOrSelf, isAdminDelete, canPublish } from "../lib/access"
 
 export const Articles: CollectionConfig = {
   slug: "articles",
@@ -11,7 +12,35 @@ export const Articles: CollectionConfig = {
     defaultColumns: ["title", "language", "author", "status", "publishedAt"],
   },
   access: {
-    read: () => true,
+    // Público pode ler artigos publicados; logado vê tudo conforme role
+    read: ({ req: { user } }) => {
+      if (!user) return { status: { equals: "published" } }
+      const role = user?.role || "author"
+      if (role === "admin" || role === "editor") return true
+      // Author só vê os próprios
+      return { createdBy: { equals: user.id } }
+    },
+    create: canCreate,
+    update: isEditorOrSelf,
+    delete: isAdminDelete,
+  },
+  hooks: {
+    beforeChange: [
+      ({ req, data, operation }) => {
+        // Registrar quem criou o artigo
+        if (operation === "create" && req.user) {
+          data.createdBy = req.user.id
+        }
+        // Author não pode publicar — forçar draft
+        if (req.user) {
+          const role = req.user.role || "author"
+          if (role === "author" && data.status === "published") {
+            data.status = "draft"
+          }
+        }
+        return data
+      },
+    ],
   },
   fields: [
     {
@@ -90,8 +119,13 @@ export const Articles: CollectionConfig = {
         { label: "Rascunho", value: "draft" },
         { label: "Publicado", value: "published" },
       ],
+      access: {
+        // Author vê o campo mas não pode alterar
+        update: canPublish,
+      },
       admin: {
         position: "sidebar",
+        description: "Apenas Editors e Admins podem publicar.",
       },
     },
     {
@@ -103,6 +137,16 @@ export const Articles: CollectionConfig = {
         date: {
           pickerAppearance: "dayOnly",
         },
+      },
+    },
+    {
+      name: "createdBy",
+      type: "relationship",
+      relationTo: "users",
+      label: "Criado por",
+      admin: {
+        position: "sidebar",
+        readOnly: true,
       },
     },
   ],
