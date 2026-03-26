@@ -70,8 +70,8 @@ export async function GET(request: Request) {
           const db = (payload.db as any).drizzle
           const alt = filename.replace(/\.[^.]+$/, "").replace(/[_-]/g, " ")
           await db.execute(
-            `INSERT INTO "media" ("filename", "mime_type", "filesize", "url", "alt", "prefix", "updated_at", "created_at")
-             VALUES ('${filename}', '${mimeType}', ${blob.size}, '${blob.url}', '${alt}', '', NOW(), NOW())`
+            `INSERT INTO "media" ("filename", "mime_type", "filesize", "url", "alt", "focal_x", "focal_y", "updated_at", "created_at")
+             VALUES ('${filename}', '${mimeType}', ${blob.size}, '${blob.url}', '${alt}', 50, 50, NOW(), NOW())`
           )
           synced.push(filename)
         } catch (e: any) {
