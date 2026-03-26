@@ -128,12 +128,18 @@ export const Articles: CollectionConfig = {
     },
     {
       name: "tags",
-      type: "text",
-      hasMany: true,
+      type: "array",
       label: "Tags",
       admin: {
-        description: "Digite e pressione Enter. Cole múltiplas separadas por vírgula.",
+        description: "Adicione tags ao artigo.",
       },
+      fields: [
+        {
+          name: "tag",
+          type: "text",
+          label: "Tag",
+        },
+      ],
     },
     {
       name: "status",
