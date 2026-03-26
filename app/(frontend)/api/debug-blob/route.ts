@@ -11,6 +11,26 @@ export async function GET(request: Request) {
   const token = process.env.BLOB_READ_WRITE_TOKEN || ""
 
   try {
+    if (action === "fix-urls") {
+      const payload = await getPayload({ config })
+      const db = (payload.db as any).drizzle
+      const blobs = await list({ token })
+      const blobMap = new Map(blobs.blobs.map((b: any) => [b.pathname.split("/").pop(), b.url]))
+
+      const existing = await payload.find({ collection: "media", limit: 100, overrideAccess: true })
+      const fixed: string[] = []
+      for (const doc of existing.docs as any[]) {
+        const blobUrl = blobMap.get(doc.filename)
+        if (blobUrl && doc.url !== blobUrl) {
+          await db.execute(`UPDATE "media" SET "url" = '${blobUrl}' WHERE "id" = ${doc.id}`)
+          fixed.push(doc.filename)
+        }
+      }
+      // Delete test files from DB
+      await db.execute(`DELETE FROM "media" WHERE "filename" IN ('test-blob.png', 'test-upload.png')`)
+      return NextResponse.json({ fixed, deletedTestFiles: true })
+    }
+
     if (action === "schema") {
       const payload = await getPayload({ config })
       const db = (payload.db as any).drizzle
