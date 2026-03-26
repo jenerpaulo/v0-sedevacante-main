@@ -18,7 +18,6 @@ export const Media: CollectionConfig = {
     delete: isAdminDelete,
   },
   upload: {
-    staticDir: "public/media",
     mimeTypes: ["image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"],
   },
   fields: [

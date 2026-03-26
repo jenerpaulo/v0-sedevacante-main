@@ -2,6 +2,7 @@ import { buildConfig } from "payload"
 import { postgresAdapter } from "@payloadcms/db-postgres"
 import { lexicalEditor } from "@payloadcms/richtext-lexical"
 import { seoPlugin } from "@payloadcms/plugin-seo"
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob"
 import { pt } from "@payloadcms/translations/languages/pt"
 import { en } from "@payloadcms/translations/languages/en"
 
@@ -50,6 +51,13 @@ export default buildConfig({
       generateTitle: ({ doc }: any) => doc?.title ? `${doc.title} | Sedevacante` : "Sedevacante",
       generateDescription: ({ doc }: any) => doc?.excerpt || "",
       generateURL: ({ doc }: any) => doc?.slug ? `https://sedevacante.com.br/articles/${doc.slug}` : "",
+    }),
+    vercelBlobStorage({
+      enabled: true,
+      collections: {
+        media: true,
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN || "",
     }),
   ],
 })
