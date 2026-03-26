@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload"
-import { isLoggedIn, isEditorOrSelf, isAdminDelete, canPublish } from "../lib/access"
+import { isLoggedIn, isAdminDelete, isEditorOrAbove } from "../lib/access"
 
 export const News: CollectionConfig = {
   slug: "news",
@@ -17,7 +17,11 @@ export const News: CollectionConfig = {
       return true
     },
     create: isLoggedIn,
-    update: isEditorOrSelf,
+    update: ({ req: { user } }) => {
+      if (!user) return false
+      if (isEditorOrAbove(user)) return true
+      return { createdBy: { equals: user.id } }
+    },
     delete: isAdminDelete,
   },
   fields: [
@@ -85,5 +89,21 @@ export const News: CollectionConfig = {
       ],
       admin: { position: "sidebar" },
     },
+    {
+      name: "createdBy",
+      type: "relationship",
+      relationTo: "users",
+      admin: { readOnly: true, position: "sidebar" },
+    },
   ],
+  hooks: {
+    beforeChange: [
+      ({ req, operation, data }) => {
+        if (operation === "create" && req.user) {
+          data.createdBy = req.user.id
+        }
+        return data
+      },
+    ],
+  },
 }
