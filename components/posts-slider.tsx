@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useLanguage } from "@/lib/language-context"
-import { useDevModal } from "@/lib/dev-modal-context"
 
 const posts = {
   en: [
@@ -248,7 +247,6 @@ const posts = {
 
 export function PostsSlider() {
   const { language, t } = useLanguage()
-  const { showModal } = useDevModal()
   const content = posts[language]
   const [isMobile, setIsMobile] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -366,7 +364,7 @@ export function PostsSlider() {
                     <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="p-4">
-                    <h4 onClick={showModal} className="text-lg font-sans font-semibold text-foreground mb-2 line-clamp-2 cursor-pointer hover:underline">{post.title}</h4>
+                    <h4 className="text-lg font-sans font-semibold text-foreground mb-2 line-clamp-2 cursor-pointer hover:underline">{post.title}</h4>
                     <p className="text-muted-foreground font-serif text-xs leading-relaxed mb-3 line-clamp-2">
                       {post.excerpt}
                     </p>
@@ -375,7 +373,6 @@ export function PostsSlider() {
                       <span>{post.date}</span>
                     </div>
                     <button
-                      onClick={showModal}
                       className="mt-3 text-primary hover:text-primary/80 font-serif text-xs font-semibold"
                     >
                       {t.readArticle} →
@@ -394,7 +391,7 @@ export function PostsSlider() {
                     <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="p-6">
-                    <h4 onClick={showModal} className="text-xl font-sans font-semibold text-foreground mb-2 line-clamp-2 cursor-pointer hover:underline">{post.title}</h4>
+                    <h4 className="text-xl font-sans font-semibold text-foreground mb-2 line-clamp-2 cursor-pointer hover:underline">{post.title}</h4>
                     <p className="text-muted-foreground font-serif text-sm leading-relaxed mb-4 line-clamp-3">
                       {post.excerpt}
                     </p>
@@ -403,7 +400,6 @@ export function PostsSlider() {
                       <span>{post.date}</span>
                     </div>
                     <button
-                      onClick={showModal}
                       className="mt-4 text-primary hover:text-primary/80 font-serif text-sm font-semibold"
                     >
                       {t.readArticle} →
@@ -418,7 +414,6 @@ export function PostsSlider() {
 
       <div className="flex justify-center mt-8 px-4">
         <button
-          onClick={showModal}
           className="px-8 py-3 border border-primary text-primary hover:bg-primary/10 font-serif font-semibold rounded transition-colors"
         >
           {t.seeAll}

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 import { useLanguage } from "@/lib/language-context"
-import { useDevModal } from "@/lib/dev-modal-context"
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
 
@@ -19,12 +18,17 @@ const languages = [
 
 export function DarkHero() {
   const { t, language, setLanguage } = useLanguage()
-  const { showModal } = useDevModal()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    showModal()
+    const href = e.currentTarget.getAttribute("href")
+    if (href?.startsWith("#")) {
+      e.preventDefault()
+      const el = document.querySelector(href)
+      if (el) el.scrollIntoView({ behavior: "smooth" })
+      setMobileMenuOpen(false)
+    }
+    // Links sem # (ex: /store) navegam normalmente
   }
 
   return (

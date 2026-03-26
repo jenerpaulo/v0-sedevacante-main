@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FileText, Download, ChevronLeft, ChevronRight } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
-import { useDevModal } from "@/lib/dev-modal-context"
 import { useEffect, useState } from "react"
 
 const downloadables = {
@@ -212,7 +211,6 @@ const downloadables = {
 
 export function DownloadablesSection() {
   const { language, t } = useLanguage()
-  const { showModal } = useDevModal()
   const content = downloadables[language]
   const [isMobile, setIsMobile] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -262,7 +260,7 @@ export function DownloadablesSection() {
                 </div>
                 <p className="text-muted-foreground font-serif text-sm leading-relaxed mb-4">{item.description}</p>
                 <Button
-                  onClick={showModal}
+
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-serif gap-2"
                 >
                   <Download className="w-4 h-4" />
@@ -305,7 +303,7 @@ export function DownloadablesSection() {
                       {displayContent[currentIndex].description}
                     </p>
                     <Button
-                      onClick={showModal}
+    
                       className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-serif gap-2"
                     >
                       <Download className="w-4 h-4" />
@@ -339,7 +337,6 @@ export function DownloadablesSection() {
 
             <div className="flex justify-center mt-8">
               <button
-                onClick={showModal}
                 className="px-8 py-3 border border-primary text-primary hover:bg-primary/10 font-serif font-semibold rounded transition-colors"
               >
                 {t.seeMore}

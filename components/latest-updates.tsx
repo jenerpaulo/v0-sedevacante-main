@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import { useLanguage } from "@/lib/language-context"
-import { useDevModal } from "@/lib/dev-modal-context"
 import { useState } from "react"
 
 const updates = {
@@ -154,7 +153,6 @@ const updates = {
 
 export function LatestUpdates() {
   const { language, t } = useLanguage()
-  const { showModal } = useDevModal()
   const content = updates[language]
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -215,7 +213,7 @@ export function LatestUpdates() {
                 <div className="flex items-center justify-between mt-auto">
                   <span className="text-sm text-muted-foreground font-serif">{content.featured.date}</span>
                   <button
-                    onClick={showModal}
+
                     className="text-primary hover:text-primary/80 font-serif text-sm font-semibold"
                   >
                     {t.readMore} →
@@ -251,7 +249,7 @@ export function LatestUpdates() {
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground font-serif">{update.date}</span>
                         <button
-                          onClick={showModal}
+      
                           className="text-primary hover:text-primary/80 font-serif text-xs font-semibold"
                         >
                           {t.readMore} →
@@ -310,7 +308,7 @@ export function LatestUpdates() {
                 <div className="flex items-center justify-between mt-auto">
                   <span className="text-sm text-muted-foreground font-serif">{content.featured.date}</span>
                   <button
-                    onClick={showModal}
+
                     className="text-primary hover:text-primary/80 font-serif text-sm font-semibold"
                   >
                     {t.readMore} →
@@ -350,7 +348,7 @@ export function LatestUpdates() {
                           {content.side[currentIndex].date}
                         </span>
                         <button
-                          onClick={showModal}
+      
                           className="text-primary hover:text-primary/80 font-serif text-xs font-semibold"
                         >
                           {t.readMore} →
