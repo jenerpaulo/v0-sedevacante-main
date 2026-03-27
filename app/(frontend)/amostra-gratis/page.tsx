@@ -33,12 +33,12 @@ export default function AmostraGratisPage() {
     <div className="min-h-screen bg-[#0C0A09] flex items-center justify-center px-4 py-20">
       <div className="max-w-lg w-full">
         {/* Book cover */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-4">
           <Image
             src="/images/livro/livro-perspec2.png"
             alt="A Crise de Autoridade na Igreja"
-            width={220}
-            height={320}
+            width={180}
+            height={260}
             className="drop-shadow-[0_16px_32px_rgba(0,0,0,0.5)]"
           />
         </div>
