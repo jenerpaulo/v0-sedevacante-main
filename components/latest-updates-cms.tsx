@@ -284,6 +284,15 @@ export function LatestUpdatesCMS({ news }: { news: NewsItem[] }) {
             </div>
           )}
         </div>
+        {/* Botão ver todas */}
+        <div className="text-center mt-8">
+          <a
+            href="/news"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors font-serif text-sm"
+          >
+            Ver todas as notícias →
+          </a>
+        </div>
       </div>
 
       {/* Lightbox */}
