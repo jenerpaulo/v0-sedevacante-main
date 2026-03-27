@@ -120,18 +120,7 @@ export default async function ArticlePage({ params }: Props) {
   const contentHtml = renderRichText(article.content)
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/articles" className="text-primary hover:text-primary/80 font-serif">
-            ← Artigos
-          </Link>
-          <Link href="/" className="text-muted-foreground hover:text-foreground font-serif text-sm">
-            Início
-          </Link>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-background pt-20">
       <article className="container mx-auto px-4 py-12 max-w-3xl">
         {/* Header */}
         <header className="mb-10">

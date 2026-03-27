@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { LanguageProvider } from "@/lib/language-context"
 import { DevModalProvider } from "@/lib/dev-modal-context"
+import { SiteNavbar } from "@/components/site-navbar"
 import "../globals.css"
 
 const playfairDisplay = Playfair_Display({
@@ -95,6 +96,7 @@ export default function FrontendLayout({
       <body className={`font-serif ${playfairDisplay.variable} ${crimsonText.variable} ${cinzelDecorative.variable} antialiased pb-20`}>
         <LanguageProvider>
           <DevModalProvider>
+            <SiteNavbar />
             <Suspense fallback={null}>{children}</Suspense>
             <Analytics />
           </DevModalProvider>

@@ -21,35 +21,7 @@ const Page = () => {
   }
 
   return (
-    <div>
-      <header className="bg-[#82071B] text-white py-4 border-b border-white/10 sticky top-0 z-50">
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <a href="/">
-            <Image
-              src="/images/store-sedevacante.png"
-              alt="Sedevacante Store"
-              width={200}
-              height={60}
-              className="h-12 w-auto hover:opacity-80 transition"
-            />
-          </a>
-          <nav className="hidden md:flex gap-8 text-sm">
-            <a href="/" className="hover:text-yellow-200 transition">
-              {language === "en" ? "Home" : "Início"}
-            </a>
-            <a href="/" className="hover:text-yellow-200 transition">
-              {language === "en" ? "Updates" : "Atualizações"}
-            </a>
-            <a href="/" className="hover:text-yellow-200 transition">
-              {language === "en" ? "Articles" : "Artigos"}
-            </a>
-            <a href="/store" className="hover:text-yellow-200 transition">
-              {language === "en" ? "Store" : "Loja"}
-            </a>
-          </nav>
-        </div>
-      </header>
-
+    <div className="pt-20">
       <section className="bg-gradient-to-b from-stone-900 to-stone-800 text-white py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">

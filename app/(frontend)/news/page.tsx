@@ -28,17 +28,7 @@ export default async function NewsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/#updates" className="text-primary hover:text-primary/80 font-serif">
-            ← Voltar ao Início
-          </Link>
-          <h1 className="text-lg font-sans font-semibold text-foreground">Notícias</h1>
-          <div className="w-24" />
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-background pt-20">
       <main className="container mx-auto px-4 py-12 max-w-5xl">
         <h2 className="text-4xl font-sans font-light text-foreground mb-2 text-center">
           Todas as Notícias
