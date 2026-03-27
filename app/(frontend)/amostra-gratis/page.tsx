@@ -39,7 +39,7 @@ export default function AmostraGratisPage() {
             alt="A Crise de Autoridade na Igreja"
             width={220}
             height={320}
-            className="w-[160px] sm:w-[220px] drop-shadow-[0_16px_32px_rgba(0,0,0,0.5)]"
+            className="w-[200px] sm:w-[220px] drop-shadow-[0_16px_32px_rgba(0,0,0,0.5)]"
           />
         </div>
 
