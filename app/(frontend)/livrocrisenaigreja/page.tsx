@@ -504,9 +504,10 @@ function PricingSection() {
   const tiers = [
     {
       name: "1º Lote",
-      badge: "Ativo",
-      badgeClass: "shimmer",
-      active: true,
+      badge: "Esgotado",
+      badgeClass: "bg-red-900/30 text-red-400 border border-red-800/30",
+      active: false,
+      soldOut: true,
       originalPrice: "R$139,90",
       price: "R$89,90",
       discount: "25% off",
@@ -519,16 +520,17 @@ function PricingSection() {
     },
     {
       name: "2º Lote",
-      badge: "Em breve",
-      badgeClass: "bg-[#1C1917] text-[#8A8078] border border-[rgba(201,168,76,0.1)]",
-      active: false,
+      badge: "Ativo",
+      badgeClass: "shimmer",
+      active: true,
+      soldOut: false,
       originalPrice: "R$139,90",
       price: "R$99,90",
       discount: "16% off",
       note: "+frete",
       features: [
         "Desconto de segundo lote",
-        "Disponível após esgotamento do 1º",
+        "Unidades limitadas",
         "Envio assim que disponível",
       ],
     },
@@ -557,7 +559,7 @@ function PricingSection() {
             Garanta o Seu Exemplar
           </h2>
           <p className="text-[#8A8078]">
-            Preço promocional por tempo limitado — aproveite o 1º Lote
+            Preço promocional por tempo limitado — aproveite o 2º Lote
           </p>
         </div>
 
@@ -565,12 +567,21 @@ function PricingSection() {
           {tiers.map((tier) => (
             <div
               key={tier.name}
-              className={`relative rounded-2xl p-6 transition-all ${
+              className={`relative rounded-2xl p-6 transition-all overflow-hidden ${
                 tier.active
                   ? "livro-pricing-active scale-[1.02] md:scale-105"
                   : "bg-[#161412]/60 border border-[rgba(201,168,76,0.06)] opacity-70"
               }`}
             >
+              {/* ESGOTADO stamp */}
+              {tier.soldOut && (
+                <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                  <span className="text-red-500 font-cinzel-decorative text-3xl font-black tracking-widest uppercase border-4 border-red-500 px-5 py-2 rounded-md rotate-[-18deg] opacity-80"
+                    style={{ textShadow: "0 0 10px rgba(220,38,38,0.4)" }}>
+                    ESGOTADO
+                  </span>
+                </div>
+              )}
               {/* Badge */}
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-cinzel-decorative text-[#E8E0D4] text-lg font-bold">
@@ -639,7 +650,7 @@ function PricingSection() {
                   className="w-full py-3 rounded-xl text-sm font-bold bg-[#1C1917] text-[#6A6058] border border-[rgba(201,168,76,0.06)] cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   <Clock size={16} />
-                  Em breve
+                  {tier.soldOut ? "Esgotado" : "Em breve"}
                 </button>
               )}
             </div>
@@ -711,8 +722,8 @@ function PurchaseSection() {
     return rest === parseInt(nums[10])
   }
 
-  const pricePerUnit = 8990 // R$89,90 in cents
-  const priceDisplay = "R$89,90"
+  const pricePerUnit = 9990 // R$99,90 in cents
+  const priceDisplay = "R$99,90"
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -796,8 +807,8 @@ function PurchaseSection() {
               Faça sua Encomenda
             </h2>
             <p className="text-[#8A8078]">
-              1º Lote — <span className="text-[#C9A84C] font-semibold">{priceDisplay}</span> por exemplar{" "}
-              <span className="text-green-400 text-xs font-medium">✓ Frete grátis · 1º Lote</span>
+              2º Lote — <span className="text-[#C9A84C] font-semibold">{priceDisplay}</span> por exemplar{" "}
+              <span className="text-[#C9A84C] text-xs font-medium">+frete · 2º Lote</span>
             </p>
           </div>
 
