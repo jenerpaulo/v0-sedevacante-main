@@ -22,12 +22,19 @@ export default async function Home() {
   try {
     const payload = await getPayload({ config })
 
-    const [articlesResult, newsResult] = await Promise.all([
+    const [articlesResult, pinnedResult, newsResult] = await Promise.all([
       payload.find({
         collection: "articles",
         where: { status: { equals: "published" } },
         sort: "-publishedAt",
-        limit: 4,
+        limit: 10,
+        depth: 1,
+      }),
+      payload.find({
+        collection: "articles",
+        where: { status: { equals: "published" }, pinned: { equals: true } },
+        sort: "pinnedOrder",
+        limit: 2,
         depth: 1,
       }),
       payload.find({
@@ -39,7 +46,10 @@ export default async function Home() {
       }),
     ])
 
-    cmsArticles = articlesResult.docs
+    // Pinned first, then remaining by date (excluding pinned)
+    const pinnedIds = new Set(pinnedResult.docs.map((d: any) => d.id))
+    const rest = articlesResult.docs.filter((d: any) => !pinnedIds.has(d.id))
+    cmsArticles = [...pinnedResult.docs, ...rest].slice(0, 4)
     cmsNews = newsResult.docs
   } catch (e) {
     // CMS data not available, components will use fallback
