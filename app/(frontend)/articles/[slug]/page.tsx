@@ -102,6 +102,9 @@ export default async function ArticlePage({ params }: Props) {
   const { slug } = await params
 
   let article: any = null
+  let prevArticle: any = null
+  let nextArticle: any = null
+
   try {
     const payload = await getPayload({ config })
     const result = await payload.find({
@@ -111,6 +114,36 @@ export default async function ArticlePage({ params }: Props) {
       depth: 1,
     })
     article = result.docs[0]
+
+    if (article?.publishedAt) {
+      // Artigo mais recente (próximo)
+      const newerResult = await payload.find({
+        collection: "articles",
+        where: {
+          status: { equals: "published" },
+          publishedAt: { greater_than: article.publishedAt },
+          slug: { not_equals: slug },
+        },
+        sort: "publishedAt",
+        limit: 1,
+        depth: 0,
+      })
+      nextArticle = newerResult.docs[0] || null
+
+      // Artigo mais antigo (anterior)
+      const olderResult = await payload.find({
+        collection: "articles",
+        where: {
+          status: { equals: "published" },
+          publishedAt: { less_than: article.publishedAt },
+          slug: { not_equals: slug },
+        },
+        sort: "-publishedAt",
+        limit: 1,
+        depth: 0,
+      })
+      prevArticle = olderResult.docs[0] || null
+    }
   } catch (e) {
     console.error("Error fetching article:", e)
   }
@@ -184,6 +217,59 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </div>
         )}
+
+        {/* Navigation footer */}
+        <nav className="mt-12 pt-8 border-t border-border">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+            {/* Previous article */}
+            <div className="text-left">
+              {prevArticle ? (
+                <Link
+                  href={`/articles/${prevArticle.slug}`}
+                  className="group inline-flex flex-col gap-1"
+                >
+                  <span className="text-xs text-muted-foreground font-serif uppercase tracking-wider">
+                    ← Anterior
+                  </span>
+                  <span className="text-sm font-sans font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                    {prevArticle.title}
+                  </span>
+                </Link>
+              ) : (
+                <span />
+              )}
+            </div>
+
+            {/* All articles */}
+            <div className="text-center">
+              <Link
+                href="/articles"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-serif text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg hover:bg-secondary/50"
+              >
+                Todos os Artigos
+              </Link>
+            </div>
+
+            {/* Next article */}
+            <div className="text-right">
+              {nextArticle ? (
+                <Link
+                  href={`/articles/${nextArticle.slug}`}
+                  className="group inline-flex flex-col gap-1 items-end"
+                >
+                  <span className="text-xs text-muted-foreground font-serif uppercase tracking-wider">
+                    Próximo →
+                  </span>
+                  <span className="text-sm font-sans font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 text-right">
+                    {nextArticle.title}
+                  </span>
+                </Link>
+              ) : (
+                <span />
+              )}
+            </div>
+          </div>
+        </nav>
       </article>
     </div>
   )
