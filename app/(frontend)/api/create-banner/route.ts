@@ -74,6 +74,7 @@ export async function GET(request: Request) {
       if (!res.ok) throw new Error("Failed to fetch banner image")
       const buffer = Buffer.from(await res.arrayBuffer())
 
+      // Upload media via Payload (media table works fine)
       const media = await payload.create({
         collection: "media",
         data: { alt: "A Crise de Autoridade na Igreja - Livro" },
@@ -86,24 +87,44 @@ export async function GET(request: Request) {
         overrideAccess: true,
       })
 
-      const banner = await payload.create({
-        collection: "banners",
-        data: {
-          title: "Livro - A Crise de Autoridade na Igreja",
-          image: media.id,
-          link: "/store",
-          openInNewTab: false,
-          location: ["homepage", "articles", "article-detail"],
-          status: "active",
-          order: 1,
-        },
-        overrideAccess: true,
-      })
+      // Insert banner via raw SQL (bypass Drizzle schema mismatch)
+      const insertResult = await db.execute(
+        `INSERT INTO "banners" ("title", "image_id", "link", "open_in_new_tab", "status", "order", "updated_at", "created_at")
+         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING "id"`,
+        [
+          "Livro - A Crise de Autoridade na Igreja",
+          media.id,
+          "/store",
+          false,
+          "active",
+          1,
+        ]
+      )
+      const bannerId = insertResult.rows[0]?.id
 
-      return NextResponse.json({ success: true, mediaId: media.id, bannerId: banner.id })
+      // Insert location values
+      const locations = ["homepage", "articles", "article-detail"]
+      for (let i = 0; i < locations.length; i++) {
+        await db.execute(
+          `INSERT INTO "banners_location" ("order", "parent_id", "value") VALUES ($1, $2, $3)`,
+          [i + 1, bannerId, locations[i]]
+        )
+      }
+
+      return NextResponse.json({ success: true, mediaId: media.id, bannerId })
     }
 
-    return NextResponse.json({ usage: "?action=check|migrate|create-banner" })
+    if (action === "debug") {
+      const cols = await db.execute(
+        `SELECT column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = 'banners' ORDER BY ordinal_position`
+      )
+      // Also check what Drizzle thinks
+      const tables = (payload.db as any).tables
+      const drizzleCols = tables?.banners ? Object.keys(tables.banners) : "not found"
+      return NextResponse.json({ dbColumns: cols.rows, drizzleColumns: drizzleCols })
+    }
+
+    return NextResponse.json({ usage: "?action=check|migrate|debug|create-banner" })
   } catch (error: any) {
     return NextResponse.json({ error: error.message, stack: error.stack?.split("\n").slice(0, 5) }, { status: 500 })
   }
