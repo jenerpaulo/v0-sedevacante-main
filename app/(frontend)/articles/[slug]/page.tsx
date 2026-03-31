@@ -180,12 +180,7 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Content */}
         <div
-          className="prose prose-lg max-w-none font-serif
-            prose-headings:font-sans prose-headings:font-semibold
-            prose-p:leading-relaxed prose-p:mb-4
-            prose-a:text-primary prose-a:underline
-            prose-blockquote:border-l-primary prose-blockquote:italic
-            prose-img:rounded-lg"
+          className="article-content max-w-none"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
 
