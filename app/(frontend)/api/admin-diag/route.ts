@@ -4,99 +4,87 @@ import config from "@payload-config"
 
 export const maxDuration = 60
 
-export async function GET() {
+export async function GET(req: Request) {
+  const url = new URL(req.url)
+  const test = url.searchParams.get("test") || "all"
   const results: any = { tests: [] }
 
   try {
     const payload = await getPayload({ config })
     results.tests.push({ name: "payload-init", status: "ok" })
 
-    // Test fetching a document (this is what the edit view does)
-    try {
-      const article = await payload.findByID({
-        collection: "articles",
-        id: 23,
-        depth: 1,
-      })
-      results.tests.push({
-        name: "fetch-article-23",
-        status: "ok",
-        title: article?.title,
-        hasContent: !!article?.content,
-        contentType: typeof article?.content,
-        contentKeys: article?.content ? Object.keys(article.content).slice(0, 5) : null,
-      })
-    } catch (e: any) {
-      results.tests.push({ name: "fetch-article-23", status: "error", error: e.message, stack: e.stack?.slice(0, 500) })
-    }
+    if (test === "all" || test === "schema") {
+      try {
+        const db = payload.db as any
+        if (db.drizzle) {
+          // Check articles table columns
+          const cols = await db.drizzle.execute(
+            `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'articles' ORDER BY ordinal_position`
+          )
+          results.tests.push({
+            name: "articles-schema",
+            status: "ok",
+            columns: cols.rows || cols,
+          })
 
-    // Test fetching with depth 0
-    try {
-      const article = await payload.findByID({
-        collection: "articles",
-        id: 23,
-        depth: 0,
-      })
-      results.tests.push({
-        name: "fetch-article-23-depth0",
-        status: "ok",
-        keys: Object.keys(article),
-      })
-    } catch (e: any) {
-      results.tests.push({ name: "fetch-article-23-depth0", status: "error", error: e.message })
-    }
+          // Check locked documents
+          const locked = await db.drizzle.execute(
+            `SELECT * FROM payload_locked_documents LIMIT 5`
+          )
+          results.tests.push({
+            name: "locked-docs",
+            status: "ok",
+            count: (locked.rows || locked).length,
+            docs: locked.rows || locked,
+          })
 
-    // Test fetching user
-    try {
-      const user = await payload.findByID({
-        collection: "users",
-        id: 1,
-        depth: 1,
-      })
-      results.tests.push({
-        name: "fetch-user-1",
-        status: "ok",
-        email: user?.email,
-      })
-    } catch (e: any) {
-      results.tests.push({ name: "fetch-user-1", status: "error", error: e.message })
-    }
+          // Check users table - specifically the role column
+          const userCols = await db.drizzle.execute(
+            `SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'users' ORDER BY ordinal_position`
+          )
+          results.tests.push({
+            name: "users-schema",
+            status: "ok",
+            columns: userCols.rows || userCols,
+          })
 
-    // Test fetching banner
-    try {
-      const banner = await payload.findByID({
-        collection: "banners",
-        id: 51,
-        depth: 1,
-      })
-      results.tests.push({
-        name: "fetch-banner-51",
-        status: "ok",
-        title: banner?.title,
-      })
-    } catch (e: any) {
-      results.tests.push({ name: "fetch-banner-51", status: "error", error: e.message })
-    }
-
-    // Check DB schema info
-    try {
-      const db = payload.db as any
-      if (db.drizzle) {
-        const tablesResult = await db.drizzle.execute(
-          `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name`
-        )
-        results.tests.push({
-          name: "db-tables",
-          status: "ok",
-          tables: tablesResult.rows?.map((r: any) => r.table_name) || tablesResult?.map?.((r: any) => r.table_name),
-        })
+          // Check current user data
+          const users = await db.drizzle.execute(
+            `SELECT id, name, email, role FROM users LIMIT 5`
+          )
+          results.tests.push({
+            name: "users-data",
+            status: "ok",
+            users: users.rows || users,
+          })
+        }
+      } catch (e: any) {
+        results.tests.push({ name: "schema-check", status: "error", error: e.message, stack: e.stack?.slice(0, 500) })
       }
-    } catch (e: any) {
-      results.tests.push({ name: "db-tables", status: "error", error: e.message })
     }
 
-    // Check Payload version info
-    results.payloadVersion = (payload as any).version || "unknown"
+    if (test === "all" || test === "render") {
+      // Try to simulate what the admin page does
+      try {
+        const article = await payload.findByID({
+          collection: "articles",
+          id: 23,
+          depth: 2,
+          overrideAccess: true,
+        })
+        
+        // Check if content is serializable
+        const serialized = JSON.stringify(article)
+        results.tests.push({
+          name: "article-serialize",
+          status: "ok",
+          size: serialized.length,
+          contentSize: JSON.stringify(article.content).length,
+        })
+      } catch (e: any) {
+        results.tests.push({ name: "article-serialize", status: "error", error: e.message })
+      }
+    }
 
   } catch (e: any) {
     results.tests.push({ name: "payload-init", status: "error", error: e.message, stack: e.stack?.slice(0, 500) })
