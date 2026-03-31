@@ -13,77 +13,95 @@ export async function GET(req: Request) {
     const payload = await getPayload({ config })
     results.tests.push({ name: "payload-init", status: "ok" })
 
-    if (test === "all" || test === "schema") {
-      try {
-        const db = payload.db as any
-        if (db.drizzle) {
-          // Check articles table columns
-          const cols = await db.drizzle.execute(
-            `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'articles' ORDER BY ordinal_position`
-          )
-          results.tests.push({
-            name: "articles-schema",
-            status: "ok",
-            columns: cols.rows || cols,
-          })
+    // Check all tables and their columns
+    try {
+      const db = payload.db as any
+      if (db.drizzle) {
+        // Check payload_locked_documents_rels schema
+        const lockedRels = await db.drizzle.execute(
+          `SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'payload_locked_documents_rels' ORDER BY ordinal_position`
+        )
+        results.tests.push({
+          name: "locked-docs-rels-schema",
+          status: "ok",
+          columns: lockedRels.rows || lockedRels,
+        })
 
-          // Check locked documents
-          const locked = await db.drizzle.execute(
-            `SELECT * FROM payload_locked_documents LIMIT 5`
-          )
-          results.tests.push({
-            name: "locked-docs",
-            status: "ok",
-            count: (locked.rows || locked).length,
-            docs: locked.rows || locked,
-          })
+        // Check payload_migrations
+        const migrations = await db.drizzle.execute(
+          `SELECT * FROM payload_migrations ORDER BY created_at DESC LIMIT 5`
+        )
+        results.tests.push({
+          name: "migrations",
+          status: "ok",
+          data: migrations.rows || migrations,
+        })
 
-          // Check users table - specifically the role column
-          const userCols = await db.drizzle.execute(
-            `SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'users' ORDER BY ordinal_position`
-          )
-          results.tests.push({
-            name: "users-schema",
-            status: "ok",
-            columns: userCols.rows || userCols,
-          })
+        // Check payload_preferences - these can affect admin rendering
+        const prefs = await db.drizzle.execute(
+          `SELECT * FROM payload_preferences LIMIT 5`
+        )
+        results.tests.push({
+          name: "preferences",
+          status: "ok",
+          count: (prefs.rows || prefs).length,
+          data: prefs.rows || prefs,
+        })
 
-          // Check current user data
-          const users = await db.drizzle.execute(
-            `SELECT id, name, email, role FROM users LIMIT 5`
-          )
-          results.tests.push({
-            name: "users-data",
-            status: "ok",
-            users: users.rows || users,
-          })
-        }
-      } catch (e: any) {
-        results.tests.push({ name: "schema-check", status: "error", error: e.message, stack: e.stack?.slice(0, 500) })
+        // Check payload_kv
+        const kv = await db.drizzle.execute(
+          `SELECT * FROM payload_kv LIMIT 5`
+        )
+        results.tests.push({
+          name: "kv",
+          status: "ok",
+          count: (kv.rows || kv).length,
+          data: kv.rows || kv,
+        })
+
+        // Check if there are any articles_rels or similar tables
+        const allTables = await db.drizzle.execute(
+          `SELECT table_name, (SELECT count(*) FROM information_schema.columns c WHERE c.table_name = t.table_name) as col_count FROM information_schema.tables t WHERE table_schema = 'public' ORDER BY table_name`
+        )
+        results.tests.push({
+          name: "all-tables",
+          status: "ok",
+          tables: (allTables.rows || allTables).map((r: any) => ({ name: r.table_name, cols: r.col_count })),
+        })
+
+        // Check what Drizzle schema knows about
+        const schemaKeys = Object.keys(db.drizzle?._.schema || {}).sort()
+        results.tests.push({
+          name: "drizzle-schema-keys",
+          status: "ok",
+          keys: schemaKeys,
+        })
       }
+    } catch (e: any) {
+      results.tests.push({ name: "deep-schema-check", status: "error", error: e.message, stack: e.stack?.slice(0, 500) })
     }
 
-    if (test === "all" || test === "render") {
-      // Try to simulate what the admin page does
-      try {
-        const article = await payload.findByID({
-          collection: "articles",
-          id: 23,
-          depth: 2,
-          overrideAccess: true,
-        })
-        
-        // Check if content is serializable
-        const serialized = JSON.stringify(article)
-        results.tests.push({
-          name: "article-serialize",
-          status: "ok",
-          size: serialized.length,
-          contentSize: JSON.stringify(article.content).length,
-        })
-      } catch (e: any) {
-        results.tests.push({ name: "article-serialize", status: "error", error: e.message })
-      }
+    // Try to call the admin init handler
+    try {
+      const collections = payload.collections
+      const collSlugs = Object.keys(collections)
+      results.tests.push({
+        name: "payload-collections",
+        status: "ok",
+        slugs: collSlugs,
+      })
+
+      // Check config.admin
+      const adminConfig = payload.config?.admin
+      results.tests.push({
+        name: "admin-config",
+        status: "ok",
+        user: adminConfig?.user,
+        hasImportMap: !!adminConfig?.importMap,
+        hasMeta: !!adminConfig?.meta,
+      })
+    } catch (e: any) {
+      results.tests.push({ name: "admin-check", status: "error", error: e.message })
     }
 
   } catch (e: any) {
