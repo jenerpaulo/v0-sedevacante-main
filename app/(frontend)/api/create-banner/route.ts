@@ -26,21 +26,17 @@ export async function GET(request: Request) {
       overrideAccess: true,
     })
 
-    // 3. Inserir banner via SQL
-    const result = await db.execute(
+    // 3. Inserir banner via SQL (valores inline - sem params)
+    const insertResult = await db.execute(
       `INSERT INTO "banners" ("title","image_id","link","open_in_new_tab","status","order","updated_at","created_at")
-       VALUES ($1,$2,$3,$4,$5,$6,NOW(),NOW()) RETURNING "id"`,
-      ["Livro - A Crise de Autoridade na Igreja", media.id, "/store", false, "active", 1]
+       VALUES ('Livro - A Crise de Autoridade na Igreja', ${media.id}, '/store', false, 'active', 1, NOW(), NOW()) RETURNING "id"`
     )
-    const bannerId = result.rows[0]?.id
+    const bannerId = insertResult.rows[0]?.id
 
     // 4. Inserir locations
-    for (const [i, loc] of ["homepage", "articles", "article-detail"].entries()) {
-      await db.execute(
-        `INSERT INTO "banners_location" ("order","parent_id","value") VALUES ($1,$2,$3)`,
-        [i + 1, bannerId, loc]
-      )
-    }
+    await db.execute(`INSERT INTO "banners_location" ("order","parent_id","value") VALUES (1, ${bannerId}, 'homepage')`)
+    await db.execute(`INSERT INTO "banners_location" ("order","parent_id","value") VALUES (2, ${bannerId}, 'articles')`)
+    await db.execute(`INSERT INTO "banners_location" ("order","parent_id","value") VALUES (3, ${bannerId}, 'article-detail')`)
 
     return NextResponse.json({ success: true, bannerId, mediaId: media.id })
   } catch (error: any) {
