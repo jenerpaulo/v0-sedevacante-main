@@ -119,12 +119,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/contato"
+                <a
+                  href="mailto:contato@sedevacante.com.br"
                   className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                 >
                   {content.contact}
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -145,20 +145,7 @@ export function Footer() {
         <div className="border-t border-primary-foreground/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-primary-foreground/60 font-serif text-sm">© 2026 {t.footerRights}</p>
-            <div className="flex gap-6 font-serif text-sm items-center">
-              <Link
-                href="/privacidade"
-                className="text-primary-foreground/60 hover:text-primary-foreground/80 transition-colors"
-              >
-                {content.privacy}
-              </Link>
-              <Link
-                href="/termos"
-                className="text-primary-foreground/60 hover:text-primary-foreground/80 transition-colors"
-              >
-                {content.terms}
-              </Link>
-            </div>
+            {/* TODO: adicionar links de Privacidade e Termos quando as páginas forem criadas */}
           </div>
         </div>
       </div>
