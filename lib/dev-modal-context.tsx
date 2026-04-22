@@ -18,12 +18,12 @@ export function DevModalProvider({ children }: { children: ReactNode }) {
   const closeModal = useCallback(() => setIsOpen(false), [])
 
   useEffect(() => {
-    // Popup com delay de 3 segundos na primeira abertura
+    // Popup com delay de 15 segundos na primeira abertura
     if (!initialRef.current) {
       initialRef.current = true
       const timeout = setTimeout(() => {
         setIsOpen(true)
-      }, 3000)
+      }, 15000)
 
       // Loop a cada 5 minutos
       intervalRef.current = setInterval(() => {

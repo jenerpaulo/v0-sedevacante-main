@@ -54,7 +54,7 @@ export function SiteNavbar() {
     { href: isHome ? "#communities" : "/#communities", label: t.navCommunities },
     { href: isHome ? "#videos" : "/#videos", label: t.navVideos },
     { href: isHome ? "#downloadables" : "/#downloadables", label: t.navDownloadables },
-    { href: "/store", label: t.navStore, bold: true },
+    { href: "/livrocrisenaigreja", label: t.navBook, bold: true },
   ]
 
   return (

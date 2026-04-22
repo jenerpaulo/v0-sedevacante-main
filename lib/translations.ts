@@ -63,7 +63,7 @@ export const translations = {
     navCommunities: "Communities",
     navVideos: "Videos",
     navDownloadables: "Downloadables",
-    navStore: "Store",
+    navBook: "Book",
     previewWarning:
       "⚠️ This site is in preview mode. All content is mock data. Please do not share until official launch.",
     modalTitle: "Under Development",
@@ -136,12 +136,12 @@ export const translations = {
     navCommunities: "Comunidades",
     navVideos: "Vídeos",
     navDownloadables: "Downloads",
-    navStore: "Loja",
+    navBook: "Livro",
     previewWarning:
       "⚠️ Este site está em modo de visualização. Todo conteúdo é apenas dados fictícios. Por favor, não compartilhe até o lançamento oficial.",
     modalTitle: "Em Desenvolvimento",
     modalMessage:
-      "Este site está atualmente em desenvolvimento, e o conteúdo é apenas para fins de demonstração. Seu apoio pode nos ajudar a seguir em frente—por favor, visite nossa página de financiamento.",
+      "Este site está constantemente em desenvolvimento. Seu apoio pode nos ajudar a seguir em frente - por favor visite nossa página de financiamento.",
     modalButton: "Visitar Página de Financiamento",
     modalClose: "Fechar",
   },
@@ -209,7 +209,7 @@ export const translations = {
     navCommunities: "Communautés",
     navVideos: "Vidéos",
     navDownloadables: "Téléchargements",
-    navStore: "Boutique",
+    navBook: "Livre",
     previewWarning:
       "⚠️ Ce site est en mode aperçu. Tout le contenu est fictif. Veuillez ne pas partager avant le lancement officiel.",
     modalTitle: "En Développement",
@@ -282,7 +282,7 @@ export const translations = {
     navCommunities: "Comunidades",
     navVideos: "Videos",
     navDownloadables: "Descargas",
-    navStore: "Tienda",
+    navBook: "Libro",
     previewWarning:
       "⚠️ Este sitio está en modo de vista previa. Todo el contenido es ficticio. Por favor, no compartas hasta el lanzamiento oficial.",
     modalTitle: "En Desarrollo",

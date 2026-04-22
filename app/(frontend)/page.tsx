@@ -3,6 +3,7 @@ import { LatestUpdates } from "@/components/latest-updates"
 import { LatestUpdatesCMS } from "@/components/latest-updates-cms"
 import { PostsSlider } from "@/components/posts-slider"
 import { PostsSliderCMS } from "@/components/posts-slider-cms"
+import { DonationMarquee } from "@/components/donation-marquee"
 import { LocationsSection } from "@/components/locations-section"
 import { VideoSection } from "@/components/video-section"
 import { ProductsShowcase } from "@/components/products-showcase"
@@ -69,6 +70,7 @@ export default async function Home() {
       ) : (
         <PostsSlider />
       )}
+      <DonationMarquee />
       <LocationsSection />
       <VideoSection />
       <DownloadablesSection />
