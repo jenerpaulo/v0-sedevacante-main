@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Loader2, Upload, X, CheckCircle2, AlertCircle } from 'lucide-react'
+import { upload } from '@vercel/blob/client'
 
 // ─── Schema ───────────────────────────────────────────
 const missionSchema = z.object({
@@ -120,21 +121,26 @@ export default function MissionFormPage() {
   async function onSubmit(data: MissionForm) {
     setError('')
     try {
-      const formData = new FormData()
-      // Append all text fields
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined && value !== '') {
-          formData.append(key, String(value))
-        }
-      })
-      // Append photos
-      photos.forEach((file) => {
-        formData.append('photos', file)
-      })
+      // Step 1: Upload photos to Vercel Blob
+      const blobUrls: string[] = []
+      for (const file of photos) {
+        const blob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/mission-upload-url',
+        })
+        blobUrls.push(blob.url)
+      }
+
+      // Step 2: Submit metadata + blob URLs as JSON
+      const payload = {
+        ...data,
+        fotos_urls: blobUrls,
+      }
 
       const res = await fetch(SUBMIT_URL, {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       })
 
       if (!res.ok) throw new Error(`Erro ${res.status}`)
