@@ -38,8 +38,8 @@ const ESTADOS = [
   'PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'
 ]
 
-// ─── Webhook URL (será configurado via env var) ────────
-const WEBHOOK_URL = process.env.NEXT_PUBLIC_MISSION_WEBHOOK || ''
+// ─── API route interna (same-origin) ───────────────────
+const SUBMIT_URL = '/api/mission-submit'
 
 export default function MissionFormPage() {
   const [photos, setPhotos] = useState<File[]>([])
@@ -94,7 +94,7 @@ export default function MissionFormPage() {
         formData.append('photos', file)
       })
 
-      const res = await fetch(WEBHOOK_URL, {
+      const res = await fetch(SUBMIT_URL, {
         method: 'POST',
         body: formData,
       })
