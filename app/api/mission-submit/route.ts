@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const NOCODB_TOKEN = process.env.NOCODB_TOKEN || ''
+const NOCODB_TOKEN = process.env.NOCODB_TOKEN || 'nc_pat_1aOj3QbDFESJWURvzf83z8vRBfALrPWOOWxuafUP'
 const NOCODB_URL = process.env.NOCODB_URL || 'https://app.nocodb.com'
 const NOCODB_TABLE = process.env.NOCODB_TABLE || 'm13x2wdrf4x1lv0'
 
