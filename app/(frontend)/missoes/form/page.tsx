@@ -11,7 +11,7 @@ import { upload } from '@vercel/blob/client'
 const missionSchema = z.object({
   nome: z.string().min(3, 'Nome da missão é obrigatório'),
   descricao: z.string().min(10, 'Descreva a missão com pelo menos 10 caracteres'),
-  rito: z.enum(['Tridentino', 'Novus Ordo', 'Ambos']),
+  rito: z.literal('Tridentino'),
   status: z.enum(['Ativa', 'Em formação', 'Suspensa']),
   jurisdicao: z.string().optional(),
   padre_responsavel: z.string().optional(),
@@ -19,8 +19,8 @@ const missionSchema = z.object({
   cidade: z.string().optional(),
   estado: z.string().optional(),
   cep: z.string().optional(),
-  coordenadas: z.string().optional(),
-  dias_missas: z.string().optional(),
+  coordenadas: z.string().url('Cole o link do Google Maps').optional().or(z.literal('')),
+  dias_missas: z.string().url('Cole o link com os horários').optional().or(z.literal('')),
   dias_confissao: z.string().optional(),
   capacidade: z.coerce.number().int().positive().optional().or(z.literal(0)),
   telefone: z.string().optional(),
@@ -56,6 +56,7 @@ export default function MissionFormPage() {
     formState: { errors, isSubmitting },
   } = useForm<MissionForm>({
     resolver: zodResolver(missionSchema),
+    defaultValues: { rito: 'Tridentino' },
   })
 
   // ─── Compress image before upload ────────────────────
@@ -215,13 +216,11 @@ export default function MissionFormPage() {
                 <textarea {...register('descricao')} rows={3} placeholder="Descreva a missão, sua história, comunidade..." className={inputClass} />
               </InputField>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <InputField label="Tipo de Rito" error={errors.rito?.message}>
-                  <select {...register('rito')} className={inputClass}>
-                    <option value="">Selecione...</option>
-                    <option value="Tridentino">Tridentino</option>
-                    <option value="Novus Ordo">Novus Ordo</option>
-                    <option value="Ambos">Ambos</option>
-                  </select>
+                <InputField label="Tipo de Rito">
+                  <input type="hidden" {...register('rito')} value="Tridentino" />
+                  <div className="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 bg-stone-100 text-sm text-stone-600">
+                    Tridentino
+                  </div>
                 </InputField>
                 <InputField label="Status" error={errors.status?.message}>
                   <select {...register('status')} className={inputClass}>
@@ -264,8 +263,8 @@ export default function MissionFormPage() {
                   <input {...register('cep')} placeholder="00000-000" className={inputClass} />
                 </InputField>
               </div>
-              <InputField label="Coordenadas GPS" hint="Formato: latitude, longitude" error={errors.coordenadas?.message}>
-                <input {...register('coordenadas')} placeholder="Ex: -23.5505, -46.6333" className={inputClass} />
+              <InputField label="Link do Google Maps" hint="Cole o link do Google Maps da localização" error={errors.coordenadas?.message}>
+                <input {...register('coordenadas')} type="url" placeholder="https://maps.google.com/..." className={inputClass} />
               </InputField>
             </div>
           </fieldset>
@@ -276,11 +275,11 @@ export default function MissionFormPage() {
               Horários e Capacidade
             </legend>
             <div className="space-y-4">
-              <InputField label="Dia e horário das Missas" error={errors.dias_missas?.message}>
-                <textarea {...register('dias_missas')} rows={2} placeholder="Ex: Domingo 8h e 18h, Quarta 19h" className={inputClass} />
+              <InputField label="Link dos horários das Missas" hint="Cole o link do Google Calendar ou página com os horários" error={errors.dias_missas?.message}>
+                <input {...register('dias_missas')} type="url" placeholder="https://..." className={inputClass} />
               </InputField>
-              <InputField label="Dias de Confissão" error={errors.dias_confissao?.message}>
-                <input {...register('dias_confissao')} placeholder="Ex: 30min antes de cada Missa" className={inputClass} />
+              <InputField label="Dias e horários de Confissão" error={errors.dias_confissao?.message}>
+                <input {...register('dias_confissao')} placeholder="Ex: Sábado 14h-16h ou 30min antes de cada Missa" className={inputClass} />
               </InputField>
               <InputField label="Capacidade de fiéis" hint="Número aproximado de lugares" error={errors.capacidade?.message}>
                 <input {...register('capacidade')} type="number" min={0} className={inputClass} />
