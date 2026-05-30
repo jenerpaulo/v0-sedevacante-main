@@ -20,14 +20,23 @@ const missionSchema = z.object({
   estado: z.string().optional(),
   cep: z.string().optional(),
   coordenadas: z.string().url('Cole o link do Google Maps').optional().or(z.literal('')),
-  dias_missas: z.string().url('Cole o link com os horários').optional().or(z.literal('')),
+  dia_missa_1: z.string().optional(),
+  dia_missa_2: z.string().optional(),
+  dia_missa_3: z.string().optional(),
+  horario_missa_1: z.string().optional(),
+  horario_missa_2: z.string().optional(),
+  horario_missa_3: z.string().optional(),
   dias_confissao: z.string().optional(),
   capacidade: z.coerce.number().int().positive().optional().or(z.literal(0)),
   telefone: z.string().optional(),
   whatsapp: z.string().optional(),
   email: z.string().email('Email inválido').optional().or(z.literal('')),
   telegram: z.string().optional(),
-  site_redes: z.string().optional(),
+  site: z.string().url('URL inválida').optional().or(z.literal('')),
+  instagram: z.string().url('URL inválida').optional().or(z.literal('')),
+  x_twitter: z.string().url('URL inválida').optional().or(z.literal('')),
+  facebook: z.string().url('URL inválida').optional().or(z.literal('')),
+  tiktok: z.string().url('URL inválida').optional().or(z.literal('')),
   observacoes: z.string().optional(),
 })
 
@@ -275,9 +284,26 @@ export default function MissionFormPage() {
               Horários e Capacidade
             </legend>
             <div className="space-y-4">
-              <InputField label="Link dos horários das Missas" hint="Cole o link do Google Calendar ou página com os horários" error={errors.dias_missas?.message}>
-                <input {...register('dias_missas')} type="url" placeholder="https://..." className={inputClass} />
-              </InputField>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <InputField label="Dia de Missa 1" hint="Ex: Domingo">
+                  <input {...register('dia_missa_1')} placeholder="Ex: Domingo" className={inputClass} />
+                </InputField>
+                <InputField label="Horário de Missa 1" hint="Ex: 08:00">
+                  <input {...register('horario_missa_1')} placeholder="Ex: 08:00" className={inputClass} />
+                </InputField>
+                <InputField label="Dia de Missa 2" hint="Ex: Quarta-feira">
+                  <input {...register('dia_missa_2')} placeholder="Ex: Quarta-feira" className={inputClass} />
+                </InputField>
+                <InputField label="Horário de Missa 2" hint="Ex: 19:00">
+                  <input {...register('horario_missa_2')} placeholder="Ex: 19:00" className={inputClass} />
+                </InputField>
+                <InputField label="Dia de Missa 3" hint="Ex: Sábado">
+                  <input {...register('dia_missa_3')} placeholder="Ex: Sábado" className={inputClass} />
+                </InputField>
+                <InputField label="Horário de Missa 3" hint="Ex: 17:00">
+                  <input {...register('horario_missa_3')} placeholder="Ex: 17:00" className={inputClass} />
+                </InputField>
+              </div>
               <InputField label="Dias e horários de Confissão" error={errors.dias_confissao?.message}>
                 <input {...register('dias_confissao')} placeholder="Ex: sexta-feira, 08:00–18:00 / domingo, Fechado" className={inputClass} />
               </InputField>
@@ -306,9 +332,21 @@ export default function MissionFormPage() {
                 <input {...register('telegram')} placeholder="@usuario ou link" className={inputClass} />
               </InputField>
             </div>
-            <div className="mt-4">
-              <InputField label="Site / Redes Sociais" error={errors.site_redes?.message}>
-                <input {...register('site_redes')} placeholder="Instagram, Facebook, site..." className={inputClass} />
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InputField label="Site" error={errors.site?.message}>
+                <input {...register('site')} type="url" placeholder="https://..." className={inputClass} />
+              </InputField>
+              <InputField label="Instagram" error={errors.instagram?.message}>
+                <input {...register('instagram')} type="url" placeholder="https://instagram.com/..." className={inputClass} />
+              </InputField>
+              <InputField label="X (Twitter)" error={errors.x_twitter?.message}>
+                <input {...register('x_twitter')} type="url" placeholder="https://x.com/..." className={inputClass} />
+              </InputField>
+              <InputField label="Facebook" error={errors.facebook?.message}>
+                <input {...register('facebook')} type="url" placeholder="https://facebook.com/..." className={inputClass} />
+              </InputField>
+              <InputField label="TikTok" error={errors.tiktok?.message}>
+                <input {...register('tiktok')} type="url" placeholder="https://tiktok.com/..." className={inputClass} />
               </InputField>
             </div>
           </fieldset>
